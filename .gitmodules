@@ -1,0 +1,6 @@
+[submodule "ext-libs/rapidcheck"]
+	path = ext-libs/rapidcheck
+	url = https://github.com/wuerges/rapidcheck.git
+[submodule "ext-libs/contest_page"]
+	path = ext-libs/contest_page
+	url = https://github.com/wuerges/iccad2018b_contest_page.git
