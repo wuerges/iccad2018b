@@ -4,9 +4,12 @@
 int main(int narg, char** argv) {
     using std::cout;
 
+    auto result = parser::parse_file(argv[1]);
 
-    if(parse_file(argv[1])) {
-        cout << "linked parser!\n";
+    if(result) {
+        cout << "Parser OK!\n";
     }
-    cout << "Hello World\n";
+    else {
+        cout << "Parser ERROR\n";
+    }
 }

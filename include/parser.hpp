@@ -1,6 +1,8 @@
 #pragma once
 
 #include <input.hpp>
+#include <optional>
 
-
-bool parse_file(char* filename);
+namespace parser {
+    std::optional<Input> parse_file(char* filename);
+}
