@@ -20,16 +20,15 @@ bool parse_input(Iterator first, Iterator last) {
     auto point     = x3::rule<struct _, std::vector<int> >{} = '(' >> uint_ >> ',' >> uint_ >> ')';
     auto rectangle = x3::rule<struct _, std::vector<int> >{} = point >> point;
     auto layer = ident >> (point | rectangle);
-    auto path = lit("PATH") >> uint_ >> (+layer) >> lit("ENDPATH");
+    auto path = lit("PATH") >> uint_ >> +layer >> lit("ENDPATH");
     auto bit = lit("BIT") >> ident >> path >> lit("ENDBIT");
-    auto bits = +bit;
-    auto bus = lit("BUS") >> ident >> bits >> lit("ENDBUS");
+    auto bus = lit("BUS") >> ident >> +bit >> lit("ENDBUS");
 
 
     bool r = phrase_parse(
         first,                          //  Start Iterator
         last,                           //  End Iterator
-        bit,   //  The Parser
+        bus,   //  The Parser
         (space | eol)                   //  The Skip-Parser
     );
     if (first != last) // fail if we did not get a full match
