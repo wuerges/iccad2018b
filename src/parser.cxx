@@ -1,18 +1,20 @@
 #include <parser.hpp>
+#include <ast_adapt.hpp>
 
-#include <boost/spirit/home/x3.hpp>
-#include <boost/spirit/include/support_istream_iterator.hpp>
 #include <fstream>
 #include <iostream>
 #include <optional>
+#include <vector>
+#include <variant>
 
+
+#include <boost/spirit/home/x3.hpp>
+#include <boost/spirit/include/support_istream_iterator.hpp>
 #include <boost/spirit/home/x3.hpp>
 #include <boost/spirit/home/x3/support/utility/error_reporting.hpp>
 
-#include <boost/spirit/home/x3/support/utility/error_reporting.hpp>
 
 namespace x3 = boost::spirit::x3;
-
 
 
 namespace parser {
@@ -43,41 +45,33 @@ namespace parser {
     struct bits_tag;
     struct bus_tag;
 
-    x3::rule<ident_tag, std::string> ident = "identifier";
+    x3::rule<ident_tag, std::string> const ident = "identifier";
     auto const ident_def = x3::lexeme [ (x3::alpha | '_') >> *(x3::alnum | '_') ];
     
-    x3::rule<point_tag, std::vector<int> > point = "point";
+    x3::rule<point_tag, ast::Point> const point = "point";
     auto const point_def = '(' > uint_ > uint_ > ')';
 
-    x3::rule<rectangle_tag, std::vector<int> > rectangle = "rectangle";
-    auto const rectangle_def = point > point;
-    
-    x3::rule<layer_tag> layer = "layer";
-    auto const layer_def = ident >> (point >> -point);
+    x3::rule<layer_tag, ast::Layer> const layer = "layer";
+    auto const layer_def = ident >> (+point);
 
-
-    x3::rule<path_tag> path = "path";
+    x3::rule<path_tag, ast::Path> const path = "path";
     auto const path_def = lit("PATH") > uint_ > +layer > lit("ENDPATH");
 
-    x3::rule<bit_tag> bit = "bit";
+    x3::rule<bit_tag, ast::Bit> const bit = "bit";
     auto const bit_def = lit("BIT") > uint_ > path > lit("ENDBIT");
 
-    x3::rule<bits_tag> bits = "bits";
+    x3::rule<bits_tag, std::vector<ast::Bit>> const bits = "bits";
     auto const bits_def = +bit;
 
-    x3::rule<bus_tag> bus = "bus";
+    x3::rule<bus_tag, ast::Bus> const bus = "bus";
     auto const bus_def = lit("BUS") > ident > bits > lit("ENDBUS");
 
+    BOOST_SPIRIT_DEFINE(ident, point, layer, path, bit, bits, bus);
 
-    BOOST_SPIRIT_DEFINE(ident, point, rectangle, layer, path, bit, bits, bus);
-
-    struct bit_tag : error_handler {};
     struct bus_tag : error_handler {};
 
     template <typename Iterator>
     std::optional<Input> parse_input(Iterator first, Iterator last) {
-
-
 
         using x3::ascii::space;
         using x3::eol;
@@ -101,11 +95,13 @@ namespace parser {
             // ;
 
         Input input;
+        ast::Bus the_bus;
         bool r = phrase_parse(
             first,                          //  Start Iterator
             last,                           //  End Iterator
-            parser,   //  The Parser
-            (space | eol)                   //  The Skip-Parser
+            parser,                         //  The Parser
+            (space | eol),                  //  The Skip-Parser
+            the_bus
         );
         return (r && first == last) ? std::optional<Input>{input} : std::nullopt;
     }
