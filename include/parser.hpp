@@ -1,4 +1,6 @@
 #pragma once
 
+#include <input.hpp>
 
-bool parse();
+
+bool parse_file(char* filename);
