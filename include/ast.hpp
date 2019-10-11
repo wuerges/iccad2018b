@@ -13,7 +13,8 @@ namespace ast {
     };
 
     struct Layer {
-        std::string name, direction;
+        std::string name;
+        bool horizontal;
         int spacing;
     };
 

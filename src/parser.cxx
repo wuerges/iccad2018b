@@ -35,6 +35,8 @@ namespace parser {
     using x3::lit;
     using x3::string;
     using x3::uint_;
+    using x3::attr;
+    using x3::omit;
     
     struct point_tag;
     struct rectangle_tag;
@@ -65,25 +67,25 @@ namespace parser {
     auto const routedshape_def = ident-lit("ENDOBSTACLES")-lit("ENDBIT") > rectangle;
 
     x3::rule<obstacles_tag, std::vector<ast::RoutedShape>> const obstacles = "obstacles";
-    auto const obstacles_def = lit("OBSTACLES") > x3::omit[uint_] > +routedshape > lit("ENDOBSTACLES");
+    auto const obstacles_def = lit("OBSTACLES") > omit[uint_] > +routedshape > lit("ENDOBSTACLES");
 
     x3::rule<bit_tag, ast::Bit> const bit = "bit";
     auto const bit_def = lit("BIT") > uint_ > +routedshape > lit("ENDBIT");
 
     x3::rule<width_tag, ast::Width> const width = "width";
-    auto const width_def = lit("WIDTH") > x3::omit[uint_] > +uint_ > lit("ENDWIDTH");
+    auto const width_def = lit("WIDTH") > omit[uint_] > +uint_ > lit("ENDWIDTH");
 
     x3::rule<bus_tag, ast::Bus> const bus = "bus";
-    auto const bus_def = lit("BUS") > ident > x3::omit[+uint_] > width > +bit > lit("ENDBUS");
+    auto const bus_def = lit("BUS") > ident > omit[+uint_] > width > +bit > lit("ENDBUS");
 
     x3::rule<buses_tag, std::vector<ast::Bus>> const buses = "buses";
-    auto const buses_def = lit("BUSES") > x3::omit[uint_] > +bus > lit("ENDBUSES");
+    auto const buses_def = lit("BUSES") > omit[uint_] > +bus > lit("ENDBUSES");
 
     x3::rule<layer_tag, ast::Layer> const layer = "layer";
-    auto const layer_def = ident-lit("ENDLAYERS") > (string("horizontal") | string("vertical")) > uint_;
+    auto const layer_def = ident-lit("ENDLAYERS") > ((lit("horizontal") >> attr(true)) | (lit("vertical") >> attr(false))) > uint_;
 
     x3::rule<layers_tag, std::vector<ast::Layer>> const layers = "layers";
-    auto const layers_def = lit("LAYERS") > x3::omit[uint_] > +layer > lit("ENDLAYERS");
+    auto const layers_def = lit("LAYERS") > omit[uint_] > +layer > lit("ENDLAYERS");
 
     BOOST_SPIRIT_DEFINE(ident, point, rectangle, boundary, routedshape, obstacles, bit, width, bus, buses, layer, layers);
 
