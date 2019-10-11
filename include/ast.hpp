@@ -7,24 +7,52 @@ namespace ast {
     struct Point {
         int x, y;
     };
-    // using point = std::vector<int>;
-    struct Layer {
-        std::string name;
-        std::vector<Point> points;
+
+    struct Rectangle {
+        Point p1, p2;
     };
 
-    struct Path {
-        int size;
-        std::vector<Layer> layers;
+    struct Layer {
+        std::string name;
+        bool horizontal;
+        int spacing;
+    };
+
+    struct RoutedShape {
+        std::string layer;
+        Rectangle rect;
     };
 
     struct Bit {
-        int width;
-        Path path;
+        int name;
+        std::vector<RoutedShape> shapes;
+    };
+
+    struct Width {
+        std::vector<int> constraints;
     };
 
     struct Bus {
         std::string name;
+        Width width;
         std::vector<Bit> bits;
+    };
+
+    struct Track {
+        RoutedShape line;
+        int width;
+    };
+
+    struct Parameters {
+        int runtime, alpha, beta, gamma, delta, epsilon;
+    };
+
+    struct Input {
+        Parameters parameters;
+        Rectangle boundary;
+        std::vector<Layer> layers;
+        std::vector<Track> tracks;
+        std::vector<Bus> buses;
+        std::vector<RoutedShape> obstacles;
     };
 }
