@@ -17,18 +17,18 @@ namespace ast {
         Rectangle rect;
     };
 
-    //struct Path {
-    //    int size;
-    //    std::vector<Layer> layers;
-    //};
+    struct Bit {
+        int name;
+        std::vector<RoutedShape> layers;
+    };
 
-    //struct Bit {
-    //    int width;
-    //    Path path;
-    //};
+    struct Width {
+        std::vector<int> constraints;
+    };
 
-    //struct Bus {
-    //    std::string name;
-    //    std::vector<Bit> bits;
-    //};
+    struct Bus {
+        std::string name;
+        Width width;
+        std::vector<Bit> bits;
+    };
 }

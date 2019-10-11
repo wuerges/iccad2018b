@@ -39,14 +39,13 @@ namespace parser {
     struct point_tag;
     struct rectangle_tag;
     struct ident_tag;
-    //struct layer_tag;
-    //struct path_tag;
-    //struct bit_tag;
-    //struct bits_tag;
-    //struct bus_tag;
+    struct bit_tag;
+    struct bus_tag;
     struct boundary_tag;
     struct routedshape_tag;
     struct obstacles_tag;
+    struct width_tag;
+    struct buses_tag;
 
     x3::rule<ident_tag, std::string> const ident = "identifier";
     auto const ident_def = x3::lexeme [ (x3::alpha | '_') >> *(x3::alnum | '_') ];
@@ -60,30 +59,27 @@ namespace parser {
     x3::rule<boundary_tag, ast::Rectangle> const boundary = "boundary";
     auto const boundary_def = lit("DESIGN_BOUNDARY") > rectangle;
 
-    //x3::rule<layer_tag, ast::Layer> const layer = "layer";
-    //auto const layer_def = ident >> (+point);
-
-    //x3::rule<path_tag, ast::Path> const path = "path";
-    //auto const path_def = lit("PATH") > uint_ > +layer > lit("ENDPATH");
-
-    //x3::rule<bit_tag, ast::Bit> const bit = "bit";
-    //auto const bit_def = lit("BIT") > uint_ > path > lit("ENDBIT");
-
-    //x3::rule<bits_tag, std::vector<ast::Bit>> const bits = "bits";
-    //auto const bits_def = +bit;
-
-    //x3::rule<bus_tag, ast::Bus> const bus = "bus";
-    //auto const bus_def = lit("BUS") > ident > bits > lit("ENDBUS");
-
     x3::rule<routedshape_tag, ast::RoutedShape> const routedshape = "routedshape";
-    auto const routedshape_def = ident-lit("ENDOBSTACLES") > rectangle;
+    auto const routedshape_def = ident-lit("ENDOBSTACLES")-lit("ENDBIT") > rectangle;
 
     x3::rule<obstacles_tag, std::vector<ast::RoutedShape>> const obstacles = "obstacles";
     auto const obstacles_def = lit("OBSTACLES") > x3::omit[uint_] > +routedshape > lit("ENDOBSTACLES");
 
-    BOOST_SPIRIT_DEFINE(ident, point, rectangle, boundary, routedshape, obstacles);
+    x3::rule<bit_tag, ast::Bit> const bit = "bit";
+    auto const bit_def = lit("BIT") > uint_ > +routedshape > lit("ENDBIT");
 
-    struct rectangle_tag : error_handler {};
+    x3::rule<width_tag, ast::Width> const width = "width";
+    auto const width_def = lit("WIDTH") > x3::omit[uint_] > +uint_ > lit("ENDWIDTH");
+
+    x3::rule<bus_tag, ast::Bus> const bus = "bus";
+    auto const bus_def = lit("BUS") > ident > x3::omit[+uint_] > width > +bit > lit("ENDBUS");
+
+    x3::rule<buses_tag, std::vector<ast::Bus>> const buses = "buses";
+    auto const buses_def = lit("BUSES") > x3::omit[uint_] > +bus > lit("ENDBUSES");
+
+    BOOST_SPIRIT_DEFINE(ident, point, rectangle, boundary, routedshape, obstacles, bit, width, bus, buses);
+
+    struct buses_tag : error_handler {};
 
     template <typename Iterator>
     std::optional<Input> parse_input(Iterator first, Iterator last) {
@@ -105,12 +101,12 @@ namespace parser {
             // it later in our on_error and on_sucess handlers
             x3::with<x3::error_handler_tag>(std::ref(error_handler))
             [
-                parser::rectangle
+                parser::buses
             ];
             // ;
 
         Input input;
-        ast::Rectangle output;
+        std::vector<ast::Bus> output;
         bool r = phrase_parse(
             first,                          //  Start Iterator
             last,                           //  End Iterator
