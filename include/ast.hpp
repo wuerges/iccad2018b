@@ -12,6 +12,11 @@ namespace ast {
         Point p1, p2;
     };
 
+    struct Layer {
+        std::string name, direction;
+        int spacing;
+    };
+
     struct RoutedShape {
         std::string layer;
         Rectangle rect;
@@ -19,7 +24,7 @@ namespace ast {
 
     struct Bit {
         int name;
-        std::vector<RoutedShape> layers;
+        std::vector<RoutedShape> shapes;
     };
 
     struct Width {
