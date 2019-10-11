@@ -52,6 +52,7 @@ namespace parser {
     struct layers_tag;
     struct track_tag;
     struct tracks_tag;
+    struct parameters_tag;
 
     x3::rule<ident_tag, std::string> const ident = "identifier";
     auto const ident_def = x3::lexeme [ (x3::alpha | '_') >> *(x3::alnum | '_') ];
@@ -95,9 +96,12 @@ namespace parser {
     x3::rule<tracks_tag, std::vector<ast::Track>> const tracks = "tracks";
     auto const tracks_def = lit("TRACKS") > omit[uint_] > +track > lit("ENDTRACKS");
 
-    BOOST_SPIRIT_DEFINE(ident, point, rectangle, boundary, routedshape, obstacles, bit, width, bus, buses, layer, layers, track, tracks);
+    x3::rule<parameters_tag, ast::Parameters> const parameters = "parameters";
+    auto const parameters_def = lit("RUNTIME") > uint_ > lit("ALPHA") > uint_ > lit("BETA") > uint_ > lit("GAMMA") > uint_ > lit("DELTA") > uint_ > lit("EPSILON") > uint_;
 
-    struct tracks_tag : error_handler {};
+    BOOST_SPIRIT_DEFINE(ident, point, rectangle, boundary, routedshape, obstacles, bit, width, bus, buses, layer, layers, track, tracks, parameters);
+
+    struct parameters_tag : error_handler {};
 
     template <typename Iterator>
     std::optional<Input> parse_input(Iterator first, Iterator last) {
@@ -119,12 +123,12 @@ namespace parser {
             // it later in our on_error and on_sucess handlers
             x3::with<x3::error_handler_tag>(std::ref(error_handler))
             [
-                parser::tracks
+                parser::parameters
             ];
             // ;
 
         Input input;
-        std::vector<ast::Track> output;
+        ast::Parameters output;
         bool r = phrase_parse(
             first,                          //  Start Iterator
             last,                           //  End Iterator

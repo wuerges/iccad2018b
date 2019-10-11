@@ -42,4 +42,8 @@ namespace ast {
         RoutedShape line;
         int width;
     };
+
+    struct Parameters {
+        int runtime, alpha, beta, gamma, delta, epsilon;
+    };
 }
