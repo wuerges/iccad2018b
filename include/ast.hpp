@@ -37,4 +37,9 @@ namespace ast {
         Width width;
         std::vector<Bit> bits;
     };
+
+    struct Track {
+        RoutedShape line;
+        int width;
+    };
 }

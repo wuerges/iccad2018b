@@ -50,6 +50,8 @@ namespace parser {
     struct buses_tag;
     struct layer_tag;
     struct layers_tag;
+    struct track_tag;
+    struct tracks_tag;
 
     x3::rule<ident_tag, std::string> const ident = "identifier";
     auto const ident_def = x3::lexeme [ (x3::alpha | '_') >> *(x3::alnum | '_') ];
@@ -64,7 +66,7 @@ namespace parser {
     auto const boundary_def = lit("DESIGN_BOUNDARY") > rectangle;
 
     x3::rule<routedshape_tag, ast::RoutedShape> const routedshape = "routedshape";
-    auto const routedshape_def = ident-lit("ENDOBSTACLES")-lit("ENDBIT") > rectangle;
+    auto const routedshape_def = ident-lit("ENDOBSTACLES")-lit("ENDBIT")-lit("ENDTRACKS") > rectangle;
 
     x3::rule<obstacles_tag, std::vector<ast::RoutedShape>> const obstacles = "obstacles";
     auto const obstacles_def = lit("OBSTACLES") > omit[uint_] > +routedshape > lit("ENDOBSTACLES");
@@ -86,10 +88,16 @@ namespace parser {
 
     x3::rule<layers_tag, std::vector<ast::Layer>> const layers = "layers";
     auto const layers_def = lit("LAYERS") > omit[uint_] > +layer > lit("ENDLAYERS");
+    
+    x3::rule<track_tag, ast::Track> const track = "track";
+    auto const track_def = routedshape > uint_;
 
-    BOOST_SPIRIT_DEFINE(ident, point, rectangle, boundary, routedshape, obstacles, bit, width, bus, buses, layer, layers);
+    x3::rule<tracks_tag, std::vector<ast::Track>> const tracks = "tracks";
+    auto const tracks_def = lit("TRACKS") > omit[uint_] > +track > lit("ENDTRACKS");
 
-    struct layers_tag : error_handler {};
+    BOOST_SPIRIT_DEFINE(ident, point, rectangle, boundary, routedshape, obstacles, bit, width, bus, buses, layer, layers, track, tracks);
+
+    struct tracks_tag : error_handler {};
 
     template <typename Iterator>
     std::optional<Input> parse_input(Iterator first, Iterator last) {
@@ -111,12 +119,12 @@ namespace parser {
             // it later in our on_error and on_sucess handlers
             x3::with<x3::error_handler_tag>(std::ref(error_handler))
             [
-                parser::layers
+                parser::tracks
             ];
             // ;
 
         Input input;
-        std::vector<ast::Layer> output;
+        std::vector<ast::Track> output;
         bool r = phrase_parse(
             first,                          //  Start Iterator
             last,                           //  End Iterator

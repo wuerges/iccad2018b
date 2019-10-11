@@ -10,4 +10,5 @@ BOOST_FUSION_ADAPT_STRUCT(ast::Bit, name, shapes);
 BOOST_FUSION_ADAPT_STRUCT(ast::Width, constraints);
 BOOST_FUSION_ADAPT_STRUCT(ast::Bus, name, width, bits);
 BOOST_FUSION_ADAPT_STRUCT(ast::Layer, name, horizontal, spacing);
+BOOST_FUSION_ADAPT_STRUCT(ast::Track, line, width);
 
