@@ -12,4 +12,5 @@ BOOST_FUSION_ADAPT_STRUCT(ast::Bus, name, width, bits);
 BOOST_FUSION_ADAPT_STRUCT(ast::Layer, name, horizontal, spacing);
 BOOST_FUSION_ADAPT_STRUCT(ast::Track, line, width);
 BOOST_FUSION_ADAPT_STRUCT(ast::Parameters, runtime, alpha, beta, gamma, delta, epsilon);
+BOOST_FUSION_ADAPT_STRUCT(ast::Input, parameters, boundary, layers, tracks, buses, obstacles);
 

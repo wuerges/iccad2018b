@@ -53,6 +53,7 @@ namespace parser {
     struct track_tag;
     struct tracks_tag;
     struct parameters_tag;
+    struct input_tag;
 
     x3::rule<ident_tag, std::string> const ident = "identifier";
     auto const ident_def = x3::lexeme [ (x3::alpha | '_') >> *(x3::alnum | '_') ];
@@ -99,12 +100,15 @@ namespace parser {
     x3::rule<parameters_tag, ast::Parameters> const parameters = "parameters";
     auto const parameters_def = lit("RUNTIME") > uint_ > lit("ALPHA") > uint_ > lit("BETA") > uint_ > lit("GAMMA") > uint_ > lit("DELTA") > uint_ > lit("EPSILON") > uint_;
 
-    BOOST_SPIRIT_DEFINE(ident, point, rectangle, boundary, routedshape, obstacles, bit, width, bus, buses, layer, layers, track, tracks, parameters);
+    x3::rule<input_tag, ast::Input> const input = "input";
+    auto const input_def = parameters > boundary > layers > tracks > buses > obstacles;
 
-    struct parameters_tag : error_handler {};
+    BOOST_SPIRIT_DEFINE(ident, point, rectangle, boundary, routedshape, obstacles, bit, width, bus, buses, layer, layers, track, tracks, parameters, input);
+
+    struct input_tag : error_handler {};
 
     template <typename Iterator>
-    std::optional<Input> parse_input(Iterator first, Iterator last) {
+    std::optional<ast::Input> parse_input(Iterator first, Iterator last) {
 
         using x3::ascii::space;
         using x3::eol;
@@ -123,12 +127,11 @@ namespace parser {
             // it later in our on_error and on_sucess handlers
             x3::with<x3::error_handler_tag>(std::ref(error_handler))
             [
-                parser::parameters
+                parser::input
             ];
             // ;
 
-        Input input;
-        ast::Parameters output;
+        ast::Input output;
         bool r = phrase_parse(
             first,                          //  Start Iterator
             last,                           //  End Iterator
@@ -136,14 +139,14 @@ namespace parser {
             (space | eol),                  //  The Skip-Parser
             output
         );
-        return (r && first == last) ? std::optional<Input>{input} : std::nullopt;
+        return (r && first == last) ? std::optional<ast::Input>{output} : std::nullopt;
     }
 
     bool parse() {
         return true;
     }
     
-    std::optional<Input> parse_file(char* filename) {
+    std::optional<ast::Input> parse_file(char* filename) {
         std::ifstream input(filename);
         input.unsetf(std::ios::skipws);
         boost::spirit::istream_iterator begin(input);

@@ -46,4 +46,13 @@ namespace ast {
     struct Parameters {
         int runtime, alpha, beta, gamma, delta, epsilon;
     };
+
+    struct Input {
+        Parameters parameters;
+        Rectangle boundary;
+        std::vector<Layer> layers;
+        std::vector<Track> tracks;
+        std::vector<Bus> buses;
+        std::vector<RoutedShape> obstacles;
+    };
 }
