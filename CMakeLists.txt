@@ -19,7 +19,14 @@ add_library(libs
   )
 include_directories(include)
 
-add_subdirectory("ext-libs/rapidcheck")
+IF(EXISTS "${PROJECT_SOURCE_DIR}/ext-libs/rapidcheck/CMakeLists.txt")
+  add_subdirectory("ext-libs/rapidcheck")
+  add_subdirectory(test)
+ENDIF()
 
-add_subdirectory(test)
-
+add_executable(Report app/report.cxx)
+target_link_libraries(Report
+    libs
+  ${Boost_FILESYSTEM_LIBRARY}
+  ${Boost_SYSTEM_LIBRARY}
+  )
