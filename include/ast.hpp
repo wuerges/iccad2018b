@@ -24,7 +24,7 @@ namespace ast {
     };
 
     struct Bit {
-        int name;
+        std::string name;
         std::vector<RoutedShape> shapes;
     };
 
