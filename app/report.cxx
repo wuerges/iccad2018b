@@ -18,11 +18,11 @@ int main(int narg, char** argv) {
     }
     bool markdown = s=="md" ? true : false;
     if (markdown) {
-        cout << "| Test case path | Number of layers | Number of tracks | Number of buses | Number of bits in buses | Number of obstacles |\n";
-        cout << "|----------------|------------------|------------------|-----------------|-------------------------|---------------------|\n";
+        cout << "| Test case path | Boundary rectangle | Number of layers | Number of tracks | Number of buses | Number of bits in buses | Number of obstacles |\n";
+        cout << "|----------------|--------------------|------------------|------------------|-----------------|-------------------------|---------------------|\n";
     }
     else {
-        cout << "\"Test case path\",\"Number of layers\",\"Number of tracks\",\"Number of buses\",\"Number of bits in buses\",\"Number of obstacles\"\n";
+        cout << "\"Test case path\",\"Boundary rectangle\",\"Number of layers\",\"Number of tracks\",\"Number of buses\",\"Number of bits in buses\",\"Number of obstacles\"\n";
     }
 
     char testcase[80];
@@ -30,12 +30,14 @@ int main(int narg, char** argv) {
         auto result = parser::parse_file(testcase);
         if(result) {
             int layer_count;
+            std::string boundary_rectangle;
             int track_count;
             int bus_count;
             int bit_count;
             int obstacles_count;
 
             layer_count = result->layers.size();
+            boundary_rectangle = std::to_string(result->boundary.p2.x-result->boundary.p1.x) + 'x' + std::to_string(result->boundary.p2.y-result->boundary.p1.y);
             track_count = result->tracks.size();
             bus_count = result->buses.size();
             bit_count = 0;
@@ -46,6 +48,7 @@ int main(int narg, char** argv) {
             if (markdown) {
                 cout <<
                     "| " << testcase <<
+                    " | " << boundary_rectangle <<
                     " | " << layer_count <<
                     " | " << track_count <<
                     " | " << bus_count <<
@@ -55,6 +58,7 @@ int main(int narg, char** argv) {
             else {
                 cout <<
                     '"' << testcase << "\"," <<
+                    boundary_rectangle << ',' <<
                     layer_count << ',' <<
                     track_count << ',' <<
                     bus_count << ',' <<
