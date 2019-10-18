@@ -76,7 +76,7 @@ namespace parser {
     x3::rule<bit_tag, ast::Bit> const bit = "bit";
     auto const bit_def = lit("BIT") > ident > +routedshape > lit("ENDBIT");
 
-    x3::rule<width_tag, ast::Width> const width = "width";
+    x3::rule<width_tag, std::vector<int>> const width = "width";
     auto const width_def = lit("WIDTH") > omit[uint_] > +uint_ > lit("ENDWIDTH");
 
     x3::rule<bus_tag, ast::Bus> const bus = "bus";

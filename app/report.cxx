@@ -5,9 +5,18 @@ int main(int narg, char** argv) {
     using std::cout;
     using std::cin;
 
+    if (narg<2) {
+        cout << "Insuficient arguments, please use ./Report <csv|md>" << std::endl;
+        return 1;
+    }
+
     //csv|markdown
     std::string s = argv[1];
-    bool markdown = s=="markdown" ? true : false;
+    if (s!="md" && s!="csv") {
+        cout << "Unknown table style" << std::endl;
+        return 1;
+    }
+    bool markdown = s=="md" ? true : false;
     if (markdown) {
         cout << "| Test case path | Number of layers | Number of tracks | Number of buses | Number of bits in buses | Number of obstacles |\n";
         cout << "|----------------|------------------|------------------|-----------------|-------------------------|---------------------|\n";
@@ -57,4 +66,6 @@ int main(int narg, char** argv) {
             cout << "Parser ERROR\n";
         }
     }
+
+    return 0;
 }

@@ -28,13 +28,9 @@ namespace ast {
         std::vector<RoutedShape> shapes;
     };
 
-    struct Width {
-        std::vector<int> constraints;
-    };
-
     struct Bus {
         std::string name;
-        Width width;
+        std::vector<int> width_constraints;
         std::vector<Bit> bits;
     };
 
