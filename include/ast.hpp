@@ -2,10 +2,11 @@
 
 #include <vector>
 #include <string>
+#include <limits>
 
 namespace ast {
     struct Point {
-        int x, y;
+        uint32_t x, y;
     };
 
     struct Rectangle {
