@@ -56,7 +56,7 @@ namespace parser {
     struct input_tag;
 
     x3::rule<ident_tag, std::string> const ident = "identifier";
-    auto const ident_def = x3::lexeme [ (x3::alpha | '_') >> *(x3::alnum | '_') ];
+    auto const ident_def = x3::lexeme [ +(x3::alnum | '_') ];
     
     x3::rule<point_tag, ast::Point> const point = "point";
     auto const point_def = '(' > uint_ > uint_ > ')';
@@ -71,12 +71,12 @@ namespace parser {
     auto const routedshape_def = ident-lit("ENDOBSTACLES")-lit("ENDBIT")-lit("ENDTRACKS") > rectangle;
 
     x3::rule<obstacles_tag, std::vector<ast::RoutedShape>> const obstacles = "obstacles";
-    auto const obstacles_def = lit("OBSTACLES") > omit[uint_] > +routedshape > lit("ENDOBSTACLES");
+    auto const obstacles_def = lit("OBSTACLES") > omit[uint_] > *routedshape > lit("ENDOBSTACLES");
 
     x3::rule<bit_tag, ast::Bit> const bit = "bit";
-    auto const bit_def = lit("BIT") > uint_ > +routedshape > lit("ENDBIT");
+    auto const bit_def = lit("BIT") > ident > +routedshape > lit("ENDBIT");
 
-    x3::rule<width_tag, ast::Width> const width = "width";
+    x3::rule<width_tag, std::vector<int>> const width = "width";
     auto const width_def = lit("WIDTH") > omit[uint_] > +uint_ > lit("ENDWIDTH");
 
     x3::rule<bus_tag, ast::Bus> const bus = "bus";

@@ -2,10 +2,11 @@
 
 #include <vector>
 #include <string>
+#include <limits>
 
 namespace ast {
     struct Point {
-        int x, y;
+        uint32_t x, y;
     };
 
     struct Rectangle {
@@ -24,17 +25,13 @@ namespace ast {
     };
 
     struct Bit {
-        int name;
+        std::string name;
         std::vector<RoutedShape> shapes;
-    };
-
-    struct Width {
-        std::vector<int> constraints;
     };
 
     struct Bus {
         std::string name;
-        Width width;
+        std::vector<int> width_constraints;
         std::vector<Bit> bits;
     };
 

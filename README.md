@@ -15,6 +15,6 @@ Para clonar e compilar o repositório, realize:
 
 ```
 git clone https://github.com/wuerges/iccad2018b.git --recurse-submodules
-mkdir build && cd build && cmake ../iccad2018b
+cd iccad2018b && mkdir build && cd build && cmake ..
 make
 ```
