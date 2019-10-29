@@ -19,11 +19,11 @@ int main(int narg, char** argv) {
     }
     bool markdown = s=="md" ? true : false;
     if (markdown) {
-        cout << "| Test case path | Boundary rectangle | Number of layers | Number of tracks | Number of buses | Number of bits in buses | Maxium number of pin shapes | Number of obstacles |\n";
-        cout << "|----------------|--------------------|------------------|------------------|-----------------|-------------------------|-----------------------------|---------------------|\n";
+        cout << "| Test case path | Boundary rectangle | Number of layers | Number of tracks | Number of buses | Number of bits in buses | Maximum number of pin shapes | Maximum number of bits per bus | Number of obstacles |\n";
+        cout << "|----------------|--------------------|------------------|------------------|-----------------|-------------------------|------------------------------|--------------------------------|---------------------|\n";
     }
     else {
-        cout << "\"Test case path\",\"Boundary rectangle\",\"Number of layers\",\"Number of tracks\",\"Number of buses\",\"Number of bits in buses\",\"Maxium number of pin shapes\",\"Number of obstacles\"\n";
+        cout << "\"Test case path\",\"Boundary rectangle\",\"Number of layers\",\"Number of tracks\",\"Number of buses\",\"Number of bits in buses\",\"Maximum number of pin shapes\",\"Maximum number of bits per bus\",\"Number of obstacles\"\n";
     }
 
     char testcase[80];
@@ -35,6 +35,7 @@ int main(int narg, char** argv) {
             int track_count;
             int bus_count;
             size_t max_pin_shape = 0;
+            size_t max_number_bits = 0;
             int bit_count;
             int obstacles_count;
 
@@ -46,6 +47,7 @@ int main(int narg, char** argv) {
             for (const ast::Bus & b:result->buses) {
                 bit_count += b.bits.size();
                 max_pin_shape = max(max_pin_shape, b.bits[0].shapes.size());
+                max_number_bits = max(max_number_bits, b.bits.size());
             }
             obstacles_count = result->obstacles.size();
 
@@ -58,6 +60,7 @@ int main(int narg, char** argv) {
                     " | " << bus_count <<
                     " | " << bit_count <<
                     " | " << max_pin_shape <<
+                    " | " << max_number_bits <<
                     " | " << obstacles_count << " |\n";
             }
             else {
@@ -69,6 +72,7 @@ int main(int narg, char** argv) {
                     bus_count << ',' <<
                     bit_count << ',' <<
                     max_pin_shape << ',' <<
+                    max_number_bits << ',' <<
                     obstacles_count << '\n';
             }
         }
