@@ -56,7 +56,7 @@ namespace parser {
     struct input_tag;
 
     x3::rule<ident_tag, std::string> const ident = "identifier";
-    auto const ident_def = x3::lexeme [ +(x3::alnum | '_') ];
+    auto const ident_def = x3::lexeme [ +(x3::alnum | '_' | '<' | '>') ];
     
     x3::rule<point_tag, ast::Point> const point = "point";
     auto const point_def = '(' > uint_ > uint_ > ')';
