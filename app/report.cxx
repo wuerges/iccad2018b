@@ -72,7 +72,8 @@ const vector<pair<string, function<void(ss&, const Input&)>>> columns = {
 };
 
 void fix_path(ss & out, const string & path) {
-    out << std::filesystem::path(path).filename().string();
+    out << path;
+    // out << std::filesystem::path(path).filename().string();
 }
 
 int main(int narg, char** argv) {
