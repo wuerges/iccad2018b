@@ -146,7 +146,7 @@ namespace parser {
         return true;
     }
     
-    std::optional<ast::Input> parse_file(char* filename) {
+    std::optional<ast::Input> parse_file(const char* filename) {
         std::ifstream input(filename);
         input.unsetf(std::ios::skipws);
         boost::spirit::istream_iterator begin(input);
