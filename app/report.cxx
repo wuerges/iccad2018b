@@ -1,5 +1,57 @@
-#include <iostream>
 #include <parser.hpp>
+
+#include <iostream>
+
+using namespace ast;
+
+
+void boundary_rectangle(stringstream & ss, const Input& result) {
+    int dx = result.boundary.p2.x - result.boundary.p1.x;
+    int dy = result.boundary.p2.y - result.boundary.p1.y;
+    ss << dx << 'x' << dy;
+}
+
+void number_of_layers(stringstream & ss, const Input& result) {
+    ss << result.layers.size();
+}
+
+void number_of_tracks(stringstream & ss, const Input& result) {
+    ss << result.tracks.size();
+}
+
+void number_of_buses(stringstream & ss, const Input& result) {
+    ss << result.buses.size();
+}
+
+void number_of_bits(stringstream & ss, const Input& result) {
+    int bit_count = 0;
+    for (const Bus & b:result->buses) {
+        bit_count += b.bits.size();
+    }
+    ss << bit_count;
+}
+
+void number_of_bits(stringstream & ss, const Input& result) {
+    int max_pin_shape = 0;
+    for (const Bus & b:result->buses) {
+        max_pin_shape = max(max_pin_shape, b.bits[0].shapes.size());
+    }
+    ss << max_pin_shape;
+}
+
+void number_of_bits(stringstream & ss, const Input& result) {
+    int max_number_bits = 0;
+    for (const Bus & b:result->buses) {
+        max_number_bits = max(max_number_bits, b.bits.size());
+    }
+    ss << max_number_bits;
+}
+
+void number_of_obstacles(stringstream & ss, const Input& result) {   
+    ss << result.obstacles.size();
+}
+
+
 
 int main(int narg, char** argv) {
     using std::cout;
@@ -44,7 +96,7 @@ int main(int narg, char** argv) {
             track_count = result->tracks.size();
             bus_count = result->buses.size();
             bit_count = 0;
-            for (const ast::Bus & b:result->buses) {
+            for (const Bus & b:result->buses) {
                 bit_count += b.bits.size();
                 max_pin_shape = max(max_pin_shape, b.bits[0].shapes.size());
                 max_number_bits = max(max_number_bits, b.bits.size());
