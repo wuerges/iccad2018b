@@ -1,12 +1,15 @@
 #pragma once
 
+#include <base.hpp>
+
 #include <vector>
 #include <string>
 #include <limits>
 
-namespace ast {
+namespace ast {    
+
     struct Point {
-        uint32_t x, y;
+        int x, y;
     };
 
     struct Rectangle {

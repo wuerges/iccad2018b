@@ -18,6 +18,7 @@ add_library(libs
   src/parser.cxx  
   src/solver.cxx
   src/result.cxx
+  src/base.cxx
   )
 include_directories(include)
 
