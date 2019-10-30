@@ -1,4 +1,6 @@
 #include <parser.hpp>
+#include <result.hpp>
+#include <solver.hpp>
 
 #include <iostream>
 #include <vector>
@@ -23,7 +25,8 @@ int main(int narg, char** argv) {
 
     auto result = parser::parse_file(argv[1]);
     if(result) {
-        
+        auto output = solve(*result);
+        cout << output << std::endl;
     }
     else {
         cerr << "Parser error." << std::endl;

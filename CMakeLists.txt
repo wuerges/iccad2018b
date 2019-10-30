@@ -16,6 +16,8 @@ ENDIF()
 # the variable before the call to add_subdirectory and reset it afterwards, if necessary.
 add_library(libs
   src/parser.cxx  
+  src/solver.cxx
+  src/result.cxx
   )
 include_directories(include)
 
