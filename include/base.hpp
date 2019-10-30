@@ -39,13 +39,10 @@ bool operator==(const Point<N> & p1, const Point<N> & p2) {
 }
 
 
-
-// void decls() {
 using R2 = Rectangle<2>;
 using R3 = Rectangle<3>;
 using P2 = Point<2>;
 using P3 = Point<3>;
-// }
 
 
 }
