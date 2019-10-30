@@ -30,3 +30,10 @@ target_link_libraries(Report
   ${Boost_FILESYSTEM_LIBRARY}
   ${Boost_SYSTEM_LIBRARY}
   )
+
+add_executable(Solver app/solver.cxx)
+target_link_libraries(Solver
+    libs
+  ${Boost_FILESYSTEM_LIBRARY}
+  ${Boost_SYSTEM_LIBRARY}
+  )
