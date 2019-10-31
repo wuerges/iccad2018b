@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 project(iccad2018b CXX)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 set (CMAKE_CXX_STANDARD 17)
 
 find_package(Boost COMPONENTS system filesystem REQUIRED)
@@ -8,6 +9,8 @@ IF (Boost_FOUND)
   ADD_DEFINITIONS( "-DHAS_BOOST" )
 ENDIF()
 
+find_package(Cairomm)
+include_directories(${Cairomm_PKGCONF_INCLUDE_DIRS})
 
 # RapidCheck will be built either as a static or a dynamic library depending on the CMake global
 # variable BUILD_SHARED_LIBS (https://cmake.org/cmake/help/latest/variable/BUILD_SHARED_LIBS.html).
@@ -31,6 +34,14 @@ add_executable(Report app/report.cxx)
 target_link_libraries(Report
     libs
   ${Boost_FILESYSTEM_LIBRARY}
+  ${Boost_SYSTEM_LIBRARY}
+  )
+
+add_executable(Draw app/draw.cxx)
+target_link_libraries(Draw
+    libs
+  ${Boost_FILESYSTEM_LIBRARY}
+  ${Cairomm_LIBRARIES}
   ${Boost_SYSTEM_LIBRARY}
   )
 
