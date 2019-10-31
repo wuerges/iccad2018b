@@ -6,4 +6,4 @@
 	url = https://github.com/wuerges/iccad2018b_contest_page.git
 [submodule "ext-libs/cad_geometry"]
 	path = ext-libs/cad_geometry
-	url = git@github.com:wuerges/cad_geometry.git
+	url = https://github.com/wuerges/cad_geometry.git
