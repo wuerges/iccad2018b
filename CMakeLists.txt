@@ -19,6 +19,8 @@ add_library(libs
   src/solver.cxx
   src/result.cxx
   src/base.cxx
+  src/astar.cxx
+  src/global.cxx
   )
 include_directories(include)
 

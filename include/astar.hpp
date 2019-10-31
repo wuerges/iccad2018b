@@ -3,12 +3,13 @@
 #include <base.hpp>
 
 #include <set>
+#include <map>
 #include <vector>
 #include <functional>
 #include <cassert>
 
 
-using std::vector, std::set, std::pair;
+using std::vector, std::set, std::pair, std::map, std::function;
 
 // For horizontal layers, Front -> East, Back -> West
 // For vertical layers Front -> South, Back -> North
@@ -19,21 +20,21 @@ enum class Direction {
 };
 
 struct Vertex {
-    using Front = Direction::Front;
-    using Back = Direction::Back;
-    using Neutral = Direction::Neutral;
+    using D = Direction;
     
     // The direction of this vertex.
-    const Direction direction;
+    D direction;
     // The layer of this vertex.
-    const int layer;
+    int layer;
     // The indexes of this vertex.
+    // each index represents a different wire.
     vector<int> points;
 
-    Vertex(const Direction d, const int l, const vector<int> pts): 
+    Vertex() {}
+    Vertex(const D d, const int l, const vector<int> pts): 
         direction(d), layer(l), points(pts) {}
 
-    void neighbors(function<void(const Vertex&)>&f ) {        
+    void neighbors(function<void(const Vertex&)> f) const {        
         // If a Vertex is neutral, it may either:
         // 1. change layer, and remain neutral.
         //    - must check if wire width constraint.
@@ -47,8 +48,8 @@ struct Vertex {
     }
 
     void step(int & x) const {
-        assert(direction != Neutral);
-        if(direction == Front) {
+        assert(direction != D::Neutral);
+        if(direction == D::Front) {
             x++;
         }
         else {
@@ -61,53 +62,82 @@ struct Vertex {
         for(int & p: r.points) {
             step(p);
         }
+        return r;
     }
 
     vector<Vertex> move1() const {
         vector<Vertex> res;
         for(int p = 0; p < points.size()-1; ++p) {
-            if(ahead(points[p+1], points[p]) {
+            if(points[p+1] > points[p]) {
                 res.push_back(*this);
                 step(res.back().points[p]);
             }
         }
         res.push_back(*this);
         step(res.back().points.back());
+        return res;
     }
 
     bool valid() const {
         // Check if position is valid.
         // p >=0 and p < ortogonal_tracks.size();
+        // TODO
         return true;
+    }
+
+    friend bool operator<(const Vertex & v1, const Vertex & v2) {
+        return v1.direction < v2.direction
+            || v1.layer < v2.layer
+            || v1.points < v2.points;
     }
 
 };
 
+const int INF = 1e9;
+
+int distance(const Vertex & v1, const Vertex & v2) {
+    // TODO
+    return INF;
+}
+
 struct AStar {
 
-    using Vertex = 
-
-    vector<ii> adjList[MAXN];
+    using Link = pair<int, Vertex>;
     
-    int dijkstra(int s, int t, int n, int dist[]) {
-        for(int i = 1; i <= n; i++) dist[i] = INF;
-        set<ii> pq;
+    vector<Vertex> dijkstra(const Vertex s, const Vertex t) {
+        map<Vertex, int> dist;
+
+        map<Vertex, Vertex> parent;
+        set<Link> pq;
         dist[s] = 0;
-        pq.insert(ii(0, s));
+        pq.insert(Link(0, s));
         while(!pq.empty()) {
-            int u = pq.begin()->second;
+            const Vertex u = pq.begin()->second;
             pq.erase(pq.begin());
-            for(int i=0; i<(int)adjList[u].size(); i++) {
-                int v = adjList[u][i].second;
-                int w = adjList[u][i].first;
-                if (dist[v] > dist[u] + w) {
-                    pq.erase(ii(dist[v], v));
-                    dist[v] = dist[u] + w;
-                    pq.insert(ii(dist[v], v));
+            u.neighbors([&dist, &pq, &parent, u](auto & v) {
+                int w = distance(u, v);
+                int du = dist[u];
+                if(dist.find(v) == dist.end()) {
+                    dist[v] = INF;
                 }
-            }
+                int & dv = dist[v];
+
+                if(dv > du + w) {
+                    pq.erase(Link(dv, v));
+                    dv = du + w;
+                    parent[v] = u;
+                }
+            });                
         }
-        return dist[t];
+
+        vector<Vertex> path;
+        path.push_back(t);
+        auto e = t;
+        while(parent.find(e) != parent.end()) {
+            e = parent[e];
+            path.push_back(e);
+        }
+        return path;
     }
 
 };
