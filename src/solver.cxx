@@ -4,6 +4,7 @@
 
 Result solve(const ast::Input & input) {
     Result r;
+    r.build(input);
 
     // TODO build global circuit representation
 
