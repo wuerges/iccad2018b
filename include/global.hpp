@@ -31,5 +31,6 @@ struct Router {
 
 };
 
+void build(Router & r, const ast::Input & input);
 
 }
