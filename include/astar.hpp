@@ -102,7 +102,7 @@ int distance(const Vertex & v1, const Vertex & v2) {
 }
 
 struct AStar {
-
+    
     using Link = pair<int, Vertex>;
     
     vector<Vertex> dijkstra(const Vertex s, const Vertex t) {

@@ -29,6 +29,5 @@ struct Router {
 
 };
 
-Router router;
 
 }
