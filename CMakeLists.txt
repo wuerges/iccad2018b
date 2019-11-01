@@ -3,6 +3,8 @@ project(iccad2018b CXX)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 set (CMAKE_CXX_STANDARD 17)
 
+set(CMAKE_CXX_FLAGS "-Ofast -march=native")
+
 find_package(Boost COMPONENTS system filesystem REQUIRED)
 IF (Boost_FOUND)
   INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})

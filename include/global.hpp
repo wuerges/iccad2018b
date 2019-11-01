@@ -37,6 +37,8 @@ struct Router {
     map<std::string, int> number_layer;
     void init_number_layer(const ast::Input & input);
     void init_tracks(const ast::Input & input);
+    
+    vector<R3> obstacles;
     void init_obstacles(const ast::Input & input);
 
     void build(const ast::Input & input);

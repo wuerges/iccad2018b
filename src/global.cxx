@@ -25,16 +25,18 @@ R3 Router::fromRoutedShape(const ast::RoutedShape & r)  {
 
 void Router::init_obstacles(const ast::Input & input) {
     for(auto & i_obstacle : input.obstacles) {
-        R3 obstacle = fromRoutedShape(i_obstacle);
-
-        router().obstacle_index.Insert(
-            obstacle.p1.coords.begin(), 
-            obstacle.p2.coords.begin(), 
-            &obstacle);
+        obstacles.push_back(fromRoutedShape(i_obstacle));
+        
+        obstacle_index.Insert(
+            obstacles.back().p1.coords.begin(), 
+            obstacles.back().p2.coords.begin(), 
+            &obstacles.back());
 
     }
 }
 void Router::init_tracks(const ast::Input & input) {
+    std::cout << "Initializing tracks" << std::endl;
+
     for(int i = 0; i < input.tracks.size(); ++i) {
         auto & i_track = input.tracks[i];        
         Track t;
@@ -44,20 +46,67 @@ void Router::init_tracks(const ast::Input & input) {
         auto & lay = layers[t.segment.p1[2]];
         lay.tracks.push_back(t);        
 
-        router().track_index.Insert(
+        track_index.Insert(
             t.segment.p1.coords.begin(), 
             t.segment.p2.coords.begin(), 
             &lay.tracks.back());
     }
+
+    // int max_collisions = 0;
+    // for(auto & layer : layers) {
+        // std::cout << "Initializing layer" << std::endl;
+
+        // for (auto & track : layer.tracks) {
+        //     // std::cout << "." << std::flush;
+        //     auto p1 = track.segment.p1;
+        //     auto p2 = track.segment.p2;
+
+        //     p1.coords[2]--;
+        //     p2.coords[2]--;
+
+        //     int number_of_collisions = 0;
+        //     track_index.Search(
+        //         p1.coords.begin(),
+        //         p2.coords.begin(),
+        //         [&](Track* t) {
+        //             number_of_collisions++;
+        //             // collisions++;
+        //             // track.crossings.emplace_back(p1.coords[2], t);
+        //             return true;
+        //         });
+        //     max_collisions = std::max(max_collisions, number_of_collisions);
+        // }
+        // for (auto & track : layer.tracks) {
+        //     auto p1 = track.segment.p1;
+        //     auto p2 = track.segment.p2;
+
+        //     p1.coords[2]++;
+        //     p2.coords[2]++;
+
+        //     int number_of_collisions = 0;
+        //     track_index.Search(
+        //         p1.coords.begin(),
+        //         p2.coords.begin(),
+        //         [&](Track* t) {
+        //             // collisions++;
+        //             number_of_collisions++;
+        //             // track.crossings.emplace_back(p1.coords[2], t);
+        //             return true;
+        //         });
+        //     max_collisions = std::max(max_collisions, number_of_collisions);
+        // }
+
+    // }
+    // std::cout << max_collisions << '\n';
 }
 
 void Router::build(const ast::Input & input) {
 
-    router().parameters = input.parameters;
-    router().boundary.p1.coords[0] = input.boundary.p1.x;
-    router().boundary.p1.coords[1] = input.boundary.p1.y;
-    router().boundary.p2.coords[0] = input.boundary.p2.x;
-    router().boundary.p2.coords[1] = input.boundary.p2.y;
+    parameters = input.parameters;
+    boundary.p1.coords[0] = input.boundary.p1.x;
+    boundary.p1.coords[1] = input.boundary.p1.y;
+    boundary.p2.coords[0] = input.boundary.p2.x;
+    boundary.p2.coords[1] = input.boundary.p2.y;
 
     // Layers must be initialized before evething else
     // because of layer numbering
