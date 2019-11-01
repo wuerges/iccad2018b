@@ -1,11 +1,14 @@
-#include <string>
-#include <iostream>
+#include <parser.hpp>
+#include <draw.hpp>
+
 #include <cairommconfig.h>
 #include <cairomm/context.h>
 #include <cairomm/surface.h>
-#include <parser.hpp>
+
 #include <sstream>
 #include <cmath>
+#include <string>
+#include <iostream>
 
 using namespace ast;
 
@@ -16,35 +19,31 @@ int main(int narg, char** argv)
 {
 #ifdef CAIRO_HAS_SVG_SURFACE
     auto result = parser::parse_file(argv[1]);
-    std::stringstream ss;
-    ss << argv[2];
-    int64_t quantizer;
-    ss >> quantizer;
     if(result) {
         string filename = "image.svg";
-        int64_t width = result->boundary.p2.x/quantizer;
-        int64_t height = result->boundary.p2.y/quantizer;
+        int64_t width = result->boundary.p2.x;
+        int64_t height = result->boundary.p2.y;
         Cairo::RefPtr<Cairo::SvgSurface> surface =
             Cairo::SvgSurface::create(filename, width, height);
 
         Cairo::RefPtr<Cairo::Context> cr = Cairo::Context::create(surface);
 
-        cr->save(); // save the state of the context
+        Draw draw = Draw(cr);
+
         cr->paint(); // fill image with the color
 
-        cr->save();
         cr->set_source_rgb(255, 215, 0);
         for (const Bus & bus:result->buses) {
             for (const Bit & bit:bus.bits) {
                 for (const RoutedShape & pin:bit.shapes) {
-                    cr->save();
-                    
-                    cr->set_line_width(0);
-                    //cout << pin.rect.p1.x << " " << pin.rect.p1.y << " " << pin.rect.p2.x-pin.rect.p1.x << " " << pin.rect.p2.y-pin.rect.p1.y << std::endl;
-                    cr->rectangle(pin.rect.p1.x/quantizer, pin.rect.p1.y/quantizer, (pin.rect.p2.x-pin.rect.p1.x)/quantizer, (pin.rect.p2.y-pin.rect.p1.y)/quantizer);
-                    cr->fill();
+                    draw.routedShape(pin);
                 }
             }
+        }
+
+        cr->set_source_rgb(0, 255, 255);
+        for (const Track & t:result->tracks) {
+            draw.track(t);
         }
 
         cr->save();
