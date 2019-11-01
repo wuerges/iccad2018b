@@ -3,6 +3,8 @@
 #include <ast.hpp>
 #include <base.hpp>
 
+#include <RTree.h>
+
 #include <map>
 #include <vector>
 
