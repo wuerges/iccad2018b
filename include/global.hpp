@@ -33,12 +33,12 @@ struct Router {
     rtree::RTree<Track*, uint32_t, 3, double> track_index;
     rtree::RTree<R3*, uint32_t, 3, double> obstacle_index;
 
-    uint32_t number_layer(const std::string & name);
+    map<std::string, int> number_layer;
+    void init_number_layer(const ast::Input & input);
 
+    void build(const ast::Input & input);
+
+    R3 fromRoutedShape(const ast::RoutedShape & r) const;
 };
 
 Router router;
-
-void build(const ast::Input & input);
-
-}
