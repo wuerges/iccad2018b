@@ -44,6 +44,10 @@ struct Router {
     R3 fromRoutedShape(const ast::RoutedShape & r) ;
 };
 
-Router router;
+static Router& router()
+{ 
+    static Router r; // initialized once due to being static
+    return r;
+}
 
 }

@@ -4,8 +4,9 @@
 
 Result solve(const ast::Input & input) {
     Result r;
-    r.build(input);
 
+
+    base::router().build(input);
     // TODO build global circuit representation
 
     AStar astar;
