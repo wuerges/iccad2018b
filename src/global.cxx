@@ -23,17 +23,7 @@ R3 Router::fromRoutedShape(const ast::RoutedShape & r)  {
     return res;
 }
 
-
-void Router::build(const ast::Input & input) {
-
-    router.parameters = input.parameters;
-    router.boundary.p1.coords[0] = input.boundary.p1.x;
-    router.boundary.p1.coords[1] = input.boundary.p1.y;
-    router.boundary.p2.coords[0] = input.boundary.p2.x;
-    router.boundary.p2.coords[1] = input.boundary.p2.y;
-
-    init_number_layer(input);
-
+void Router::init_obstacles(const ast::Input & input) {
     for(auto & i_obstacle : input.obstacles) {
         R3 obstacle = fromRoutedShape(i_obstacle);
 
@@ -43,7 +33,8 @@ void Router::build(const ast::Input & input) {
             &obstacle);
 
     }
-
+}
+void Router::init_tracks(const ast::Input & input) {
     for(int i = 0; i < input.tracks.size(); ++i) {
         auto & i_track = input.tracks[i];        
         Track t;
@@ -57,9 +48,23 @@ void Router::build(const ast::Input & input) {
             t.segment.p1.coords.begin(), 
             t.segment.p2.coords.begin(), 
             &lay.tracks.back());
-
     }
+}
 
+void Router::build(const ast::Input & input) {
+
+    router.parameters = input.parameters;
+    router.boundary.p1.coords[0] = input.boundary.p1.x;
+    router.boundary.p1.coords[1] = input.boundary.p1.y;
+    router.boundary.p2.coords[0] = input.boundary.p2.x;
+    router.boundary.p2.coords[1] = input.boundary.p2.y;
+
+    // Layers must be initialized before evething else
+    // because of layer numbering
+    init_number_layer(input);
+
+    init_obstacles(input);
+    init_tracks(input);
 }
 
 }
