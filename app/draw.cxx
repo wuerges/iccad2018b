@@ -1,5 +1,6 @@
 #include <parser.hpp>
 #include <draw.hpp>
+#include <global.hpp>
 
 #include <cairommconfig.h>
 #include <cairomm/context.h>
@@ -18,8 +19,11 @@ using std::vector, std::pair, std::string;
 int main(int narg, char** argv)
 {
 #ifdef CAIRO_HAS_SVG_SURFACE
-    auto result = parser::parse_file(argv[1]);
+    auto result = parser::parse_file(argv[1]);    
     if(result) {
+        base::router().build(*result);
+
+
         string filename = "image.svg";
         int64_t width = result->boundary.p2.x;
         int64_t height = result->boundary.p2.y;
