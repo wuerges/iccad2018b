@@ -28,9 +28,15 @@ struct Router {
     R2 boundary;
 
     vector<Layer> layers;
+    vector<Track> tracks;
+
+    rtree::RTree<Track*, int, 3, double> track_index;
+    rtree::RTree<R3*, int, 3, double> obstacle_index;
 
 };
 
-void build(Router & r, const ast::Input & input);
+Router router;
+
+void build(const ast::Input & input);
 
 }
