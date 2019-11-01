@@ -1,6 +1,7 @@
 #pragma once
 
 #include <base.hpp>
+#include <global.hpp>
 
 #include <set>
 #include <map>
@@ -138,6 +139,19 @@ struct AStar {
             path.push_back(e);
         }
         return path;
+    }
+
+    vector<vector<Vertex>> globalRoute() {
+        vector<vector<Vertex>> result;
+        vector<pair<Vertex, Vertex>> buses;
+
+        // TODO build the vertices for the buses
+
+
+        for(auto [s, t] : buses) {
+            result.push_back(dijkstra(s, t));
+        }
+        return result;
     }
 
 };
