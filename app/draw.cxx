@@ -41,7 +41,6 @@ int main(int narg, char** argv)
             }
         }
 
-        cr->set_source_rgb(0, 255, 255);
         for (const Track & t:result->tracks) {
             draw.track(t);
         }
