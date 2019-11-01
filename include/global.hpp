@@ -30,8 +30,8 @@ struct Router {
     vector<Layer> layers;
     vector<Track> tracks;
 
-    rtree::RTree<Track*, int, 3, double> track_index;
-    rtree::RTree<R3*, int, 3, double> obstacle_index;
+    rtree::RTree<Track*, uint32_t, 3, double> track_index;
+    rtree::RTree<R3*, uint32_t, 3, double> obstacle_index;
 
 };
 
