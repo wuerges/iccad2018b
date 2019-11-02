@@ -34,6 +34,11 @@ struct Rectangle {
     Point<N> p1, p2;
 };
 
+template<int N>
+std::ostream & operator<<(std::ostream & out, const Rectangle<N> & r) {
+    out << "Rectangle(" << r.p1 <<"," << r.p2 << ")";
+    return out;
+}
 
 template<int N> 
 Point<N> crossing(const Rectangle<N> & r1, const Rectangle<N> & r2) {
@@ -60,6 +65,31 @@ uint32_t distance(const Point<N> & p1, const Point<N> & p2) {
     }
     return result;
 }
+
+
+int disti(int a, int b, int aw, int bw);
+
+template<int N>
+uint32_t distance(const Rectangle<N> & r1, const Rectangle<N> & r2) {
+
+    uint32_t result = 0;
+    for(int i = 0; i < N; ++i) {
+        int ax1 = r1.p1[i];
+        int ax2 = r1.p2[i];
+        int adx = std::abs(ax1 - ax2);
+        
+        int bx1 = r2.p1[i];
+        int bx2 = r2.p2[i];
+        int bdx = std::abs(bx1 - bx2);
+        
+        result += disti(ax1, bx1, adx, bdx);
+    }
+    // std::cout << "r1 =" << r1 << std::endl;
+    // std::cout << "r2 =" << r2 << std::endl;
+    // std::cout << "distance = " << result << std::endl;
+    return result;
+}
+
 
 template<int N>
 bool operator==(const Point<N> & p1, const Point<N> & p2) {

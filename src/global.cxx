@@ -160,7 +160,7 @@ void Router::global_routing(const ast::Input & input) {
                 // exit(-1);
             }
             auto shape1 = fromRoutedShape(bit.shapes[0]);
-            auto shape2 = fromRoutedShape(bit.shapes[0]);
+            auto shape2 = fromRoutedShape(bit.shapes[1]);
 
             Track* t1;
             track_index.Search(
@@ -170,8 +170,8 @@ void Router::global_routing(const ast::Input & input) {
                 );
             Track* t2;
             track_index.Search(
-                shape1.p1.coords.begin(), 
-                shape1.p2.coords.begin(),
+                shape2.p1.coords.begin(), 
+                shape2.p2.coords.begin(),
                 [&t2](auto x) { t2 = x; return false; }
                 );
             std::cout << "track " << t1 << " --> " << t2 << std::endl;

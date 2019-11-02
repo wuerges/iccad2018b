@@ -20,10 +20,10 @@ include_directories(${Cairomm_PKGCONF_INCLUDE_DIRS})
 # or, if you are including RapidCheck as a subdirectory and wish to control the library type, you can set
 # the variable before the call to add_subdirectory and reset it afterwards, if necessary.
 add_library(libs
+  src/base.cxx
   src/parser.cxx  
   src/solver.cxx
   src/result.cxx
-  src/base.cxx
   src/astar.cxx
   src/global.cxx
   )
