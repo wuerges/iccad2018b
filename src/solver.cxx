@@ -10,6 +10,7 @@ Result solve(const ast::Input & input) {
 
 
     base::router().build(input);
+    base::router().global_routing(input);
     // TODO build global circuit representation
 
     // AStar astar;
@@ -19,15 +20,15 @@ Result solve(const ast::Input & input) {
 
     // DEBUG
 
-    cout << "Routing:" << endl;
+    // cout << "Routing:" << endl;
 
-    for(auto & l : base::router().layers) {
-        for(auto & t : l.tracks) {
-            base::router().route(
-                &t,
-                &base::router().layers.front().tracks.front());
-        }
-    }
+    // for(auto & l : base::router().layers) {
+    //     for(auto & t : l.tracks) {
+    //         base::router().route(
+    //             &t,
+    //             &base::router().layers.front().tracks.front());
+    //     }
+    // }
 
     // TODO Build result from routes
 

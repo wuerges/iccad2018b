@@ -140,14 +140,40 @@ void Router::build(const ast::Input & input) {
 
 
 void Router::route(const Track* from, const Track* to) {
-    std::cout << "routing track " << from << " --> " << to << std::endl;
-
     AStarWire w;
     Vertex v1{from, from->segment.p1};
     Vertex v2{to, to->segment.p2};
 
     paths.push_back(w.dijkstra(v1, v2));
-    std::cout << "finished routing!" << std::endl;
+}
+
+
+void Router::global_routing(const ast::Input & input) {
+    for(auto bus : input.buses) {
+        for(auto bit : bus.bits) {
+            std::cout << ".";
+            if(bit.shapes.size() != 2) {
+                std::cerr << "bit with shapes != 2" << std::endl;
+                exit(-1);
+            }
+            auto shape1 = fromRoutedShape(bit.shapes[0]);
+            auto shape2 = fromRoutedShape(bit.shapes[0]);
+
+            Track* t1;
+            track_index.Search(
+                shape1.p1.coords.begin(), 
+                shape1.p2.coords.begin(),
+                [&t1](auto x) { t1 = x; return false; }
+                );
+            Track* t2;
+            track_index.Search(
+                shape1.p1.coords.begin(), 
+                shape1.p2.coords.begin(),
+                [&t2](auto x) { t2 = x; return false; }
+                );
+            route(t1, t2);
+        }
+    }
 }
 
 }
