@@ -22,6 +22,7 @@ int main(int narg, char** argv)
     auto result = parser::parse_file(argv[1]);    
     if(result) {
         base::router().build(*result);
+        base::router().global_routing(*result);
 
 
         string filename = "image.svg";
@@ -36,17 +37,34 @@ int main(int narg, char** argv)
 
         cr->paint(); // fill image with the color
 
-        cr->set_source_rgb(255, 215, 0);
-        for (const Bus & bus:result->buses) {
-            for (const Bit & bit:bus.bits) {
-                for (const RoutedShape & pin:bit.shapes) {
-                    draw.routedShape(pin);
-                }
-            }
-        }
+        // cr->set_source_rgb(255, 215, 0);
+        // for (const Bus & bus:result->buses) {
+        //     for (const Bit & bit:bus.bits) {
+        //         for (const RoutedShape & pin:bit.shapes) {
+        //             draw.routedShape(pin);
+        //         }
+        //     }
+        // }
 
-        for (const Track & t:result->tracks) {
-            draw.track(t);
+        // for (const Track & t:result->tracks) {
+        //     draw.track(t);
+        // }
+        
+        std::cout << "draw paths.size(): " << base::router().paths.size() << std::endl;
+
+        for(auto & route : base::router().paths) {
+            std::cout << "route.size() = " << route.size() << std::endl;
+            for(int i = 1; i < route.size(); ++i) {
+                cr->set_source_rgb(255, 255, 255);
+                int x = std::min(route[i][0], route[i-1][0]);
+                int y = std::min(route[i][1], route[i-1][1]);
+                int dx = std::abs((int)route[i][0] - (int)route[i-1][0]);
+                int dy = std::abs((int)route[i][1] - (int)route[i-1][1]);
+                std::cout << "rect" << x << " " << y << " " << dx << " " << dy << std::endl;
+                cr->rectangle(x, y, dx, dy);
+                cr->stroke();
+                cr->fill();
+            }
         }
 
         cr->save();

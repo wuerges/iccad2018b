@@ -144,17 +144,20 @@ void Router::route(const Track* from, const Track* to) {
     Vertex v1{from, from->segment.p1};
     Vertex v2{to, to->segment.p2};
 
+    std::cout << "pushing path" << std::endl;    
     paths.push_back(w.dijkstra(v1, v2));
+
+    std::cout << "calc p.size() = " << paths.back().size() << std::endl;
+    
 }
 
 
 void Router::global_routing(const ast::Input & input) {
     for(auto bus : input.buses) {
         for(auto bit : bus.bits) {
-            std::cout << ".";
             if(bit.shapes.size() != 2) {
-                std::cerr << "bit with shapes != 2" << std::endl;
-                exit(-1);
+                std::cout << "bit with shapes != 2" << std::endl;
+                // exit(-1);
             }
             auto shape1 = fromRoutedShape(bit.shapes[0]);
             auto shape2 = fromRoutedShape(bit.shapes[0]);
@@ -171,6 +174,7 @@ void Router::global_routing(const ast::Input & input) {
                 shape1.p2.coords.begin(),
                 [&t2](auto x) { t2 = x; return false; }
                 );
+            std::cout << "track " << t1 << " --> " << t2 << std::endl;
             route(t1, t2);
         }
     }
