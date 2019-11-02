@@ -50,39 +50,41 @@ struct AStarWire {
     
     using Link = pair<int, Vertex>;
     
-    vector<Vertex> dijkstra(const Vertex s, const Vertex t) {
-        // map<Vertex, int> dist;
+    vector<base::P3> dijkstra(const Vertex s, const Vertex t) {
+        map<Vertex, int> dist;
+        map<Vertex, Vertex> parent;
+        
+        set<Link> pq;
+        dist[s] = 0;
+        pq.insert(Link(0, s));
+        while(!pq.empty()) {
+            const Vertex u = pq.begin()->second;
+            pq.erase(pq.begin());
+            u.neighbors([&dist, &pq, &parent, u](auto & v) {
+                int w = distance(u, v);
+                int du = dist[u];
+                if(dist.find(v) == dist.end()) {
+                    dist[v] = INF;
+                }
+                int & dv = dist[v];
 
-        // map<Vertex, Vertex> parent;
-        // set<Link> pq;
-        // dist[s] = 0;
-        // pq.insert(Link(0, s));
-        // while(!pq.empty()) {
-        //     const Vertex u = pq.begin()->second;
-        //     pq.erase(pq.begin());
-        //     u.neighbors([&dist, &pq, &parent, u](auto & v) {
-        //         int w = distance(u, v);
-        //         int du = dist[u];
-        //         if(dist.find(v) == dist.end()) {
-        //             dist[v] = INF;
-        //         }
-        //         int & dv = dist[v];
+                if(dv > du + w) {
+                    pq.erase(Link(dv, v));
+                    dv = du + w;
+                    parent.erase(v);
+                    parent.emplace(v,u);
+                }
+                return true;
+            });                
+        }
 
-        //         if(dv > du + w) {
-        //             pq.erase(Link(dv, v));
-        //             dv = du + w;
-        //             parent[v] = u;
-        //         }
-        //     });                
-        // }
-
-        vector<Vertex> path;
-        // path.push_back(t);
-        // auto e = t;
-        // while(parent.find(e) != parent.end()) {
-        //     e = parent[e];
-        //     path.push_back(e);
-        // }
+        vector<P3> path;
+        path.push_back(t.origin);
+        const Vertex * e = &t;
+        while(parent.find(*e) != parent.end()) {
+            e = &parent[*e];
+            path.push_back(e->origin);
+        }
         return path;
     }
 
