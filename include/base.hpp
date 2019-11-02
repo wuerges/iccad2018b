@@ -28,6 +28,15 @@ struct Rectangle {
     Point<N> p1, p2;
 };
 
+
+template<int N> 
+Point<N> crossing(Rectangle<N> r1, Rectangle<N> r2) {
+    Rectangle<N> ret;
+
+    // TODO
+    return ret;
+}
+
 template<int N>
 bool operator==(const Point<N> & p1, const Point<N> & p2) {
     for(int i = 0; i < N; ++i) {

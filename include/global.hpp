@@ -8,14 +8,15 @@
 #include <map>
 #include <vector>
 
-using std::map, std::vector, std::pair;
+using std::map;
+using std::vector;
+using std::pair;
 
 namespace base {
 
 struct Track {
     R3 segment; // the rectangle for this track;
     int width;
-    vector<pair<int, Track*>> crossings; // the tracks that cross this track in the upper or lower layer
 };
 
 struct Layer {
@@ -32,6 +33,8 @@ struct Router {
     vector<Layer> layers;
 
     rtree::RTree<Track*, uint32_t, 3, double> track_index;
+    void adjacentTracks(const Track *, std::function<bool(const Track*)>) const;
+
     rtree::RTree<R3*, uint32_t, 3, double> obstacle_index;
 
     map<std::string, int> number_layer;

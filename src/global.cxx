@@ -100,6 +100,27 @@ void Router::init_tracks(const ast::Input & input) {
     // std::cout << max_collisions << '\n';
 }
 
+void Router::adjacentTracks(const Track * u, std::function<bool(const Track*)> f) const {
+
+    auto above = u->segment;
+    auto bellow = u->segment;
+
+    above.p1.coords[2]--;    
+    above.p2.coords[2]--;    
+
+    bellow.p1.coords[2]++;    
+    bellow.p2.coords[2]++;    
+
+    track_index.Search(
+        above.p1.coords.begin(),
+        above.p2.coords.begin(),
+        f);
+    track_index.Search(
+        bellow.p1.coords.begin(),
+        bellow.p2.coords.begin(),
+        f);
+}
+
 void Router::build(const ast::Input & input) {
 
     parameters = input.parameters;
