@@ -82,7 +82,7 @@ struct AStarWire {
         path.push_back(t.origin);
         const Vertex * e = &t;
         while(parent.find(*e) != parent.end()) {
-            e = &parent[*e];
+            e = &parent.find(*e)->second;
             path.push_back(e->origin);
         }
         return path;

@@ -2,6 +2,9 @@
 #include <global.hpp>
 #include <astar.hpp>
 
+#include <iostream>
+using namespace std;
+
 Result solve(const ast::Input & input) {
     Result r;
 
@@ -9,9 +12,22 @@ Result solve(const ast::Input & input) {
     base::router().build(input);
     // TODO build global circuit representation
 
-    AStar astar;
+    // AStar astar;
 
-    auto routes = astar.globalRoute();
+    // auto routes = astar.globalRoute();
+
+
+    // DEBUG
+
+    cout << "Routing:" << endl;
+
+    for(auto & l : base::router().layers) {
+        for(auto & t : l.tracks) {
+            base::router().route(
+                &t,
+                &base::router().layers.front().tracks.front());
+        }
+    }
 
     // TODO Build result from routes
 

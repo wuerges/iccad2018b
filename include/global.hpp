@@ -47,6 +47,10 @@ struct Router {
     void build(const ast::Input & input);
 
     R3 fromRoutedShape(const ast::RoutedShape & r) ;
+
+
+    vector<vector<P3>> paths;
+    void route(const Track* from, const Track* to);
 };
 
 static Router& router()

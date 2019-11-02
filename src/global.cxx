@@ -1,4 +1,5 @@
 #include <global.hpp>
+#include <astarwire.hpp>
 
 namespace base {
 
@@ -135,6 +136,18 @@ void Router::build(const ast::Input & input) {
 
     init_obstacles(input);
     init_tracks(input);
+}
+
+
+void Router::route(const Track* from, const Track* to) {
+    std::cout << "routing track " << from << " --> " << to << std::endl;
+
+    AStarWire w;
+    Vertex v1{from, from->segment.p1};
+    Vertex v2{to, to->segment.p2};
+
+    paths.push_back(w.dijkstra(v1, v2));
+    std::cout << "finished routing!" << std::endl;
 }
 
 }

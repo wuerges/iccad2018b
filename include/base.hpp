@@ -41,11 +41,11 @@ Point<N> crossing(const Rectangle<N> & r1, const Rectangle<N> & r2) {
 
     // If r1 is horizontal;
     if(r1.p1[0] == r1.p2[0]) {
-        ret[0] = r1.p1[0];
+        ret.coords[0] = r1.p1[0];
     }
     // If r1 is vertical;
     else {
-        ret[1] == r1.p1[1];
+        ret.coords[1] == r1.p1[1];
     }
     return ret;
 }
@@ -54,7 +54,9 @@ template<int N>
 uint32_t distance(const Point<N> & p1, const Point<N> & p2) {
     uint32_t result = 0;
     for(int i = 0; i < N; ++i) {
-        result += std::abs(p1[i] - p2[i]);
+        int p1i = p1[i];
+        int p2i = p2[i];
+        result += std::abs(p1i - p2i);
     }
     return result;
 }
