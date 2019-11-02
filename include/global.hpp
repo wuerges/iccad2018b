@@ -21,7 +21,7 @@ struct Track {
 
 struct Layer {
     bool horizontal;
-    uint32_t spacing;
+    int spacing;
     vector<Track> tracks;
 };
 
@@ -32,10 +32,10 @@ struct Router {
 
     vector<Layer> layers;
 
-    rtree::RTree<Track*, uint32_t, 3, double> track_index;
+    rtree::RTree<Track*, int, 3, double> track_index;
     void adjacentTracks(const Track *, std::function<bool(const Track*)>) const;
 
-    rtree::RTree<R3*, uint32_t, 3, double> obstacle_index;
+    rtree::RTree<R3*, int, 3, double> obstacle_index;
 
     map<std::string, int> number_layer;
     void init_number_layer(const ast::Input & input);

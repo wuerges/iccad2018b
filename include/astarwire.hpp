@@ -50,7 +50,7 @@ struct Vertex {
 
 const int INF = 1e9;
 
-uint32_t distance(const Vertex & v1, const Vertex & v2) {
+int distance(const Vertex & v1, const Vertex & v2) {
     return base::distance(v1.origin, v2.origin);
 }
 

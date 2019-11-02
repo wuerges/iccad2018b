@@ -15,12 +15,15 @@ void Router::init_number_layer(const ast::Input & input) {
 
 R3 Router::fromRoutedShape(const ast::RoutedShape & r)  {
     R3 res;
-    res.p1.coords[0] = r.rect.p1.x;
-    res.p1.coords[1] = r.rect.p1.y;
+
+    res.p1.coords[0] = std::min(r.rect.p1.x, r.rect.p2.x);
+    res.p1.coords[1] = std::min(r.rect.p1.y, r.rect.p2.y);
     res.p1.coords[2] = number_layer[r.layer];
-    res.p2.coords[0] = r.rect.p2.x;
-    res.p2.coords[1] = r.rect.p2.y;
+
+    res.p2.coords[0] = std::max(r.rect.p1.x, r.rect.p2.x);
+    res.p2.coords[1] = std::max(r.rect.p1.y, r.rect.p2.y);
     res.p2.coords[2] = number_layer[r.layer];
+
     return res;
 }
 
@@ -39,66 +42,42 @@ void Router::init_tracks(const ast::Input & input) {
     std::cout << "Initializing tracks" << std::endl;
 
     for(int i = 0; i < input.tracks.size(); ++i) {
-        auto & i_track = input.tracks[i];        
+        auto & i_track = input.tracks[i];
+
         Track t;
         t.segment = fromRoutedShape(i_track.line);
         t.width = i_track.width;
 
         auto & lay = layers[t.segment.p1[2]];
-        lay.tracks.push_back(t);        
+        lay.tracks.push_back(t);
 
         track_index.Insert(
             t.segment.p1.coords.begin(), 
             t.segment.p2.coords.begin(), 
-            &lay.tracks.back());
+            &(lay.tracks.back()));
     }
 
-    // int max_collisions = 0;
-    // for(auto & layer : layers) {
-        // std::cout << "Initializing layer" << std::endl;
+    int max_collisions = 0;
+    for(auto & layer : layers) {
+        std::cout << "Initializing layer" << std::endl;
 
-        // for (auto & track : layer.tracks) {
-        //     // std::cout << "." << std::flush;
-        //     auto p1 = track.segment.p1;
-        //     auto p2 = track.segment.p2;
+        
+        for (auto & track : layer.tracks) {
+            // std::cout << "." << std::flush;
+            std::cout << ">>> Track ";
+            std::cout << track.segment << std::endl;
+            
+            int number_of_collisions = 0;
+            adjacentTracks(&track, [&](const Track * v) {
+                std::cout << "  v: " << v->segment << std::endl;
+                number_of_collisions++;
+                return true;
+            });            
+            max_collisions = std::max(max_collisions, number_of_collisions);
+        }
 
-        //     p1.coords[2]--;
-        //     p2.coords[2]--;
-
-        //     int number_of_collisions = 0;
-        //     track_index.Search(
-        //         p1.coords.begin(),
-        //         p2.coords.begin(),
-        //         [&](Track* t) {
-        //             number_of_collisions++;
-        //             // collisions++;
-        //             // track.crossings.emplace_back(p1.coords[2], t);
-        //             return true;
-        //         });
-        //     max_collisions = std::max(max_collisions, number_of_collisions);
-        // }
-        // for (auto & track : layer.tracks) {
-        //     auto p1 = track.segment.p1;
-        //     auto p2 = track.segment.p2;
-
-        //     p1.coords[2]++;
-        //     p2.coords[2]++;
-
-        //     int number_of_collisions = 0;
-        //     track_index.Search(
-        //         p1.coords.begin(),
-        //         p2.coords.begin(),
-        //         [&](Track* t) {
-        //             // collisions++;
-        //             number_of_collisions++;
-        //             // track.crossings.emplace_back(p1.coords[2], t);
-        //             return true;
-        //         });
-        //     max_collisions = std::max(max_collisions, number_of_collisions);
-        // }
-
-    // }
-    // std::cout << max_collisions << '\n';
+    }
+    std::cout << "max_collisions = " << max_collisions << '\n';
 }
 
 void Router::adjacentTracks(const Track * u, std::function<bool(const Track*)> f) const {

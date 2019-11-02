@@ -7,8 +7,8 @@ namespace base {
 
 template <int N>
 struct Point {
-    std::array<uint32_t, N> coords;
-    uint32_t operator[](const int i) const {
+    std::array<int, N> coords;
+    int operator[](const int i) const {
         return coords[i];
     }
 
@@ -56,8 +56,8 @@ Point<N> crossing(const Rectangle<N> & r1, const Rectangle<N> & r2) {
 }
 
 template<int N>
-uint32_t distance(const Point<N> & p1, const Point<N> & p2) {
-    uint32_t result = 0;
+int distance(const Point<N> & p1, const Point<N> & p2) {
+    int result = 0;
     for(int i = 0; i < N; ++i) {
         int p1i = p1[i];
         int p2i = p2[i];
@@ -70,9 +70,9 @@ uint32_t distance(const Point<N> & p1, const Point<N> & p2) {
 int disti(int a, int b, int aw, int bw);
 
 template<int N>
-uint32_t distance(const Rectangle<N> & r1, const Rectangle<N> & r2) {
+int distance(const Rectangle<N> & r1, const Rectangle<N> & r2) {
 
-    uint32_t result = 0;
+    int result = 0;
     for(int i = 0; i < N; ++i) {
         int ax1 = r1.p1[i];
         int ax2 = r1.p2[i];
