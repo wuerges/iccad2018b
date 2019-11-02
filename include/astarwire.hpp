@@ -33,13 +33,17 @@ struct Vertex {
         });
     }
 
+    friend bool operator<(const Vertex & v1, const Vertex & v2) {
+        if(v1.track < v2.track) return true;
+        return v1.origin < v2.origin;
+    }
+
 };
 
 const int INF = 1e9;
 
-int distance(const Vertex & v1, const Vertex & v2) {
-    // TODO
-    return INF;
+uint32_t distance(const Vertex & v1, const Vertex & v2) {
+    return base::distance(v1.origin, v2.origin);
 }
 
 struct AStarWire {

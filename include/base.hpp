@@ -11,7 +11,13 @@ struct Point {
     uint32_t operator[](const int i) const {
         return coords[i];
     }
+
 };
+
+template<int N>
+bool operator<(const Point<N> & v1, const Point<N> & v2) {
+    return v1.coords < v2.coords;        
+}
 
 template<int N>
 std::ostream & operator<<(std::ostream & out, const Point<N> & p) {
@@ -30,11 +36,27 @@ struct Rectangle {
 
 
 template<int N> 
-Point<N> crossing(Rectangle<N> r1, Rectangle<N> r2) {
-    Rectangle<N> ret;
+Point<N> crossing(const Rectangle<N> & r1, const Rectangle<N> & r2) {
+    Point<N> ret = r2.p1;
 
-    // TODO
+    // If r1 is horizontal;
+    if(r1.p1[0] == r1.p2[0]) {
+        ret[0] = r1.p1[0];
+    }
+    // If r1 is vertical;
+    else {
+        ret[1] == r1.p1[1];
+    }
     return ret;
+}
+
+template<int N>
+uint32_t distance(const Point<N> & p1, const Point<N> & p2) {
+    uint32_t result = 0;
+    for(int i = 0; i < N; ++i) {
+        result += std::abs(p1[i] - p2[i]);
+    }
+    return result;
 }
 
 template<int N>
