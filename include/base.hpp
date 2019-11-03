@@ -19,6 +19,7 @@ bool operator<(const Point<N> & v1, const Point<N> & v2) {
     return v1.coords < v2.coords;        
 }
 
+
 template<int N>
 std::ostream & operator<<(std::ostream & out, const Point<N> & p) {
     out << "(";
@@ -33,6 +34,25 @@ template <int N>
 struct Rectangle {
     Point<N> p1, p2;
 };
+
+template<int N>
+bool operator==(const Point<N> & p1, const Point<N> & p2) {
+    return p1.coords == p2.coords;
+}
+
+template<int N>
+bool operator!=(const Point<N> & p1, const Point<N> & p2) {
+    return p1.coords != p2.coords;
+}
+
+
+template<int N>
+bool operator<(const Rectangle<N> & v1, const Rectangle<N> & v2) {
+    if(v1.p1 != v2.p1) {
+        return v1.p1 < v2.p1;
+    }
+    return v1.p2 < v2.p2;
+}
 
 template<int N>
 std::ostream & operator<<(std::ostream & out, const Rectangle<N> & r) {
@@ -91,15 +111,6 @@ int distance(const Rectangle<N> & r1, const Rectangle<N> & r2) {
 }
 
 
-template<int N>
-bool operator==(const Point<N> & p1, const Point<N> & p2) {
-    for(int i = 0; i < N; ++i) {
-        if(p1[i] != p2[i]) {
-            return false;
-        }
-    }
-    return true;
-}
 
 
 using R2 = Rectangle<2>;

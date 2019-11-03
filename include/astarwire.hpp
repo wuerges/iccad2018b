@@ -40,8 +40,10 @@ struct Vertex {
     }
 
     friend bool operator<(const Vertex & v1, const Vertex & v2) {
-        if(v1.track < v2.track) return true;
-        return v1.origin < v2.origin;
+        if(v1.origin != v2.origin) {
+            return v1.origin < v2.origin;
+        }
+        return *v1.track < *v2.track;
     }
 
     friend std::ostream & operator<<(std::ostream & out, const Vertex & v) {
@@ -65,13 +67,14 @@ struct AStarWire {
         // std::cout << "Dikstra for " << s << " " << t << std::endl;
 
         map<Vertex, int> dist;
-        map<Vertex, Vertex> parent;
+        map<const Vertex, const Vertex> parent;
         
         set<Link> pq;
         dist[s] = 0;
         // std::cout << "Insert into pq: " << s << std::endl;
         pq.insert(Link(0, s));
         bool found = false;
+
 
         while(!pq.empty()) {
             const Vertex u = pq.begin()->second;
@@ -82,10 +85,11 @@ struct AStarWire {
 
             if(distance(t.track->segment, u.track->segment) == 0) {
                 // std::cout << "Found!" << std::endl;
-                std::cout << t << std::endl;
-                std::cout << u << std::endl;
+                // std::cout << "t=" << t << std::endl;
+                // std::cout << "u=" << u << std::endl;
                 // std::cout << "distance=" << distance(t.track->segment, u.track->segment) << std::endl;
-                parent.emplace(t, u);
+
+                parent.insert(std::make_pair(t, u));                
                 found = true;
                 break;
             }
@@ -113,14 +117,17 @@ struct AStarWire {
         }
 
         vector<P3> path;
-        if(found) {
-            path.push_back(t.origin);
-            const Vertex * e = &t;
-            while(parent.find(*e) != parent.end()) {
-                e = &parent.find(*e)->second;
-                path.push_back(e->origin);
-            }
+
+        path.push_back(t.origin);
+        const Vertex * e = &t;
+        std::cout << "E=" << *e << std::endl;
+            
+        while(parent.find(*e) != parent.end()) {
+            e = &parent.find(*e)->second;
+            std::cout << "E=" << *e << std::endl;
+            path.push_back(e->origin);
         }
+        
         return path;
     }
 

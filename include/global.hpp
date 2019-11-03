@@ -17,6 +17,12 @@ namespace base {
 struct Track {
     R3 segment; // the rectangle for this track;
     int width;
+    friend bool operator<(const Track & t1, const Track & t2) {
+        if (t1.width != t2.width) {
+            return t1.width < t2.width;
+        }
+        return t1.segment < t2.segment;
+    }
 };
 
 struct Layer {
