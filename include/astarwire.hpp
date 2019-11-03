@@ -25,7 +25,7 @@ struct Vertex {
 
     void neighbors(function<void(const Vertex&)> f) const {
         const R3 & seg = track->segment;
-        std::cout << seg << std::endl;
+        // std::cout << seg << std::endl;
         // std::cout << "neighboors of " << track->segment << std::endl;
         // std::cout << "Address of router: " << &base::router() << std::endl;
         
@@ -80,7 +80,7 @@ struct AStarWire {
             const Vertex u = pq.begin()->second;
             pq.erase(pq.begin());
 
-            std::cout<< "taking from pq: " << u << std::endl;
+            // std::cout<< "taking from pq: " << u << std::endl;
             // std::cout << "pq.size() " << pq.size() << std::endl;
 
             if(distance(t.track->segment, u.track->segment) == 0) {
@@ -134,9 +134,9 @@ struct AStarWire {
                     it->first.track->segment,
                     it->second.track->segment);
                 path.push_back(p);
-                std::cout<< "crossing A: " << it->first.track->segment  << std::endl;
-                std::cout<< "crossing B: " << it->second.track->segment  << std::endl;
-                std::cout<< "crossing X: " << p << std::endl;
+                // std::cout<< "crossing A: " << it->first.track->segment  << std::endl;
+                // std::cout<< "crossing B: " << it->second.track->segment  << std::endl;
+                // std::cout<< "crossing X: " << p << std::endl;
             }
 
 
