@@ -80,7 +80,7 @@ struct AStarWire {
             const Vertex u = pq.begin()->second;
             pq.erase(pq.begin());
 
-            // std::cout<< "taking from pq: " << u << std::endl;
+            std::cout<< "taking from pq: " << u << std::endl;
             // std::cout << "pq.size() " << pq.size() << std::endl;
 
             if(distance(t.track->segment, u.track->segment) == 0) {
@@ -94,7 +94,7 @@ struct AStarWire {
                 break;
             }
             // std::cout << "\nNeighbors" << std::endl;
-            u.neighbors([&dist, &pq, &parent, u](auto & v) {
+            u.neighbors([&dist, &pq, &parent, u, t](auto & v) {
                 // std::cout << "n[u]: v = " << v << std::endl;
                 
                 int w = distance(u, v);
@@ -105,10 +105,13 @@ struct AStarWire {
                 int & dv = dist[v];
 
                 if(dv > du + w) {
+
+                    int h = distance(v, t);
+
                     // std::cout << "adding to pq = " << v << std::endl;
-                    pq.erase(Link(dv, v));
+                    pq.erase(Link(dv+h, v));
                     dv = du + w;
-                    pq.insert(Link(dv, v));
+                    pq.insert(Link(dv+h, v));
                     parent.erase(v);
                     parent.emplace(v,u);
                 }
