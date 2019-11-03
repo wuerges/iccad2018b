@@ -26,7 +26,7 @@ struct Vertex {
     void neighbors(function<void(const Vertex&)> f) const {
         const R3 & seg = track->segment;
         std::cout << seg << std::endl;
-        base::router().adjacentTracks(track, [&seg,f](const Track * tv){
+        base::router().adjacentTracks(*track, [&seg,f](const Track * tv){
             std::cout << "adjacent!!!!!" << std::endl;
             std::cout << tv->segment << std::endl;
 

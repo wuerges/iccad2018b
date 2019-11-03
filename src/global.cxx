@@ -41,25 +41,38 @@ void Router::init_obstacles(const ast::Input & input) {
 void Router::init_tracks(const ast::Input & input) {
     std::cout << "Initializing tracks" << std::endl;
 
-    for(int i = 0; i < input.tracks.size(); ++i) {
-        auto & i_track = input.tracks[i];
-
+    // for(int i = 0; i < input.tracks.size(); ++i) {
+    //     auto & i_track = input.tracks[i];
+    for(auto & i_track : input.tracks) {
         Track t;
         t.segment = fromRoutedShape(i_track.line);
         t.width = i_track.width;
 
         auto & lay = layers[t.segment.p1[2]];
-        lay.tracks.push_back(t);
+        lay.tracks.push_back(t);        
+    }
 
-        track_index.Insert(
-            t.segment.p1.coords.begin(), 
-            t.segment.p2.coords.begin(), 
-            &(lay.tracks.back()));
+    for(auto & layer : layers) {
+        std::cout << "Initializing layer" << std::endl;        
+        for (auto & track : layer.tracks) {
+            track_index.Insert(
+                track.segment.p1.coords.begin(), 
+                track.segment.p2.coords.begin(), 
+                &track);
+            std::cout << "Inserted: "<< track.segment << std::endl;
+            track_index.Search(
+                track.segment.p1.coords.begin(), 
+                track.segment.p2.coords.begin(), 
+                [](Track * t) {
+                    std::cout << "Found: " << t->segment << std::endl;
+                    return true;
+                });
+        }
     }
 
     int max_collisions = 0;
     for(auto & layer : layers) {
-        std::cout << "Initializing layer" << std::endl;
+        std::cout << "Counting layer" << std::endl;
 
         
         for (auto & track : layer.tracks) {
@@ -68,7 +81,7 @@ void Router::init_tracks(const ast::Input & input) {
             std::cout << track.segment << std::endl;
             
             int number_of_collisions = 0;
-            adjacentTracks(&track, [&](const Track * v) {
+            adjacentTracks(track, [&](const Track * v) {
                 std::cout << "  v: " << v->segment << std::endl;
                 number_of_collisions++;
                 return true;
@@ -80,10 +93,10 @@ void Router::init_tracks(const ast::Input & input) {
     std::cout << "max_collisions = " << max_collisions << '\n';
 }
 
-void Router::adjacentTracks(const Track * u, std::function<bool(const Track*)> f) const {
+void Router::adjacentTracks(const Track & u, std::function<bool(const Track*)> f) const {
 
-    auto above = u->segment;
-    auto bellow = u->segment;
+    auto above = u.segment;
+    auto bellow = u.segment;
 
     above.p1.coords[2]--;    
     above.p2.coords[2]--;    
@@ -91,10 +104,12 @@ void Router::adjacentTracks(const Track * u, std::function<bool(const Track*)> f
     bellow.p1.coords[2]++;    
     bellow.p2.coords[2]++;    
 
+    // if(above.p2.coords[2] >= 0) {
     track_index.Search(
         above.p1.coords.begin(),
         above.p2.coords.begin(),
         f);
+    // }
     track_index.Search(
         bellow.p1.coords.begin(),
         bellow.p2.coords.begin(),
