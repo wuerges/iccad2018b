@@ -11,6 +11,7 @@ Result solve(const ast::Input & input) {
 
     base::router().build(input);
     base::router().global_routing(input);
+
     // TODO build global circuit representation
 
     // AStar astar;

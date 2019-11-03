@@ -22,6 +22,7 @@ int main(int narg, char** argv)
     auto result = parser::parse_file(argv[1]);    
     if(result) {
         base::router().build(*result);
+        std::cout << "Address of router: " << &base::router() << std::endl;
         base::router().global_routing(*result);
 
 
@@ -46,9 +47,9 @@ int main(int narg, char** argv)
             }
         }
 
-        for (const Track & t:result->tracks) {
-            draw.track(t);
-        }
+        // for (const Track & t:result->tracks) {
+        //     draw.track(t);
+        // }
         
 
         std::cout << "draw paths.size(): " << base::router().paths.size() << std::endl;
@@ -71,11 +72,11 @@ int main(int narg, char** argv)
                 int x = route[i][0];
                 int y = route[i][1];
                 std::cout << "point " << x << " " << y << std::endl;
-                cr->rectangle(x-2, y-2, 5, 5);
+                cr->rectangle(x-4, y-4, 10, 10);
                 cr->fill();
                 cr->stroke();
             }
-            break;
+            // break;
         }
         cr->save();
         cr->show_page();

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <base.hpp>
 #include <global.hpp>
+#include <base.hpp>
 
 #include <set>
 #include <map>
@@ -26,9 +26,12 @@ struct Vertex {
     void neighbors(function<void(const Vertex&)> f) const {
         const R3 & seg = track->segment;
         std::cout << seg << std::endl;
+        // std::cout << "neighboors of " << track->segment << std::endl;
+        // std::cout << "Address of router: " << &base::router() << std::endl;
+        
         base::router().adjacentTracks(*track, [&seg,f](const Track * tv){
-            std::cout << "adjacent!!!!!" << std::endl;
-            std::cout << tv->segment << std::endl;
+            // std::cout << "adjacent!!!!!" << std::endl;
+            // std::cout << tv->segment << std::endl;
 
             Vertex v{tv, base::crossing(tv->segment, seg)};
             f(v);
@@ -59,14 +62,14 @@ struct AStarWire {
     using Link = pair<int, Vertex>;
     
     vector<base::P3> dijkstra(const Vertex s, const Vertex t) {
-        std::cout << "Dikstra for " << s << " " << t << std::endl;
+        // std::cout << "Dikstra for " << s << " " << t << std::endl;
 
         map<Vertex, int> dist;
         map<Vertex, Vertex> parent;
         
         set<Link> pq;
         dist[s] = 0;
-        std::cout << "Insert into pq: " << s << std::endl;
+        // std::cout << "Insert into pq: " << s << std::endl;
         pq.insert(Link(0, s));
         bool found = false;
 
@@ -74,21 +77,21 @@ struct AStarWire {
             const Vertex u = pq.begin()->second;
             pq.erase(pq.begin());
 
-            std::cout<< "taking from pq: " << u << std::endl;
-            std::cout << "pq.size() " << pq.size() << std::endl;
+            // std::cout<< "taking from pq: " << u << std::endl;
+            // std::cout << "pq.size() " << pq.size() << std::endl;
 
             if(distance(t.track->segment, u.track->segment) == 0) {
-                std::cout << "Found!" << std::endl;
+                // std::cout << "Found!" << std::endl;
                 std::cout << t << std::endl;
                 std::cout << u << std::endl;
-                std::cout << "distance=" << distance(t.track->segment, u.track->segment) << std::endl;
+                // std::cout << "distance=" << distance(t.track->segment, u.track->segment) << std::endl;
                 parent.emplace(t, u);
                 found = true;
                 break;
             }
-            std::cout << "\nNeighbors" << std::endl;
+            // std::cout << "\nNeighbors" << std::endl;
             u.neighbors([&dist, &pq, &parent, u](auto & v) {
-                std::cout << "n[u]: v = " << v << std::endl;
+                // std::cout << "n[u]: v = " << v << std::endl;
                 
                 int w = distance(u, v);
                 int du = dist[u];
@@ -98,7 +101,7 @@ struct AStarWire {
                 int & dv = dist[v];
 
                 if(dv > du + w) {
-                    std::cout << "adding to pq = " << v << std::endl;
+                    // std::cout << "adding to pq = " << v << std::endl;
                     pq.erase(Link(dv, v));
                     dv = du + w;
                     pq.insert(Link(dv, v));

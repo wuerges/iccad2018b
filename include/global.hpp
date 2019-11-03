@@ -52,12 +52,16 @@ struct Router {
     vector<vector<P3>> paths;
     void route(const Track* from, const Track* to);
     void global_routing(const ast::Input & input);
+
+    static Router& router()
+    { 
+        static Router r; // initialized once due to being static
+        return r;
+    }
 };
 
-static Router& router()
-{ 
-    static Router r; // initialized once due to being static
-    return r;
+static Router & router() {
+    return Router::router();
 }
 
 }
