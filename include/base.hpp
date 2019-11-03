@@ -41,6 +41,16 @@ bool operator==(const Point<N> & p1, const Point<N> & p2) {
 }
 
 template<int N>
+bool operator==(const Rectangle<N> & r1, const Rectangle<N> & r2) {
+    return r1.p1 == r2.p1 && r1.p2 == r2.p2;
+}
+
+template<int N>
+bool operator!=(const Rectangle<N> & r1, const Rectangle<N> & r2) {
+    return r1.p1 != r2.p1 && r1.p2 != r2.p2;
+}
+
+template<int N>
 bool operator!=(const Point<N> & p1, const Point<N> & p2) {
     return p1.coords != p2.coords;
 }
@@ -70,7 +80,7 @@ Point<N> crossing(const Rectangle<N> & r1, const Rectangle<N> & r2) {
     }
     // If r1 is vertical;
     else {
-        ret.coords[1] == r1.p1[1];
+        ret.coords[1] = r1.p1[1];
     }
     return ret;
 }

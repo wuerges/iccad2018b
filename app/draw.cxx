@@ -54,32 +54,28 @@ int main(int narg, char** argv)
 
         std::cout << "draw paths.size(): " << base::router().paths.size() << std::endl;
 
-        int nr = 0;
         for(auto & route : base::router().paths) {
-            if(nr == 2) {
-                std::cout << "route.size() = " << route.size() << std::endl;
-                for(int i = 1; i < route.size(); ++i) {
-                    cr->set_source_rgb(0, 255, 0);
-                    int x = std::min(route[i][0], route[i-1][0]);
-                    int y = std::min(route[i][1], route[i-1][1]);
-                    int dx = std::abs((int)route[i][0] - (int)route[i-1][0]);
-                    int dy = std::abs((int)route[i][1] - (int)route[i-1][1]);
-                    std::cout << "rect " << x << " " << y << " " << dx << " " << dy << std::endl;
-                    cr->rectangle(x, y, dx, dy);
-                    cr->stroke();
-                    cr->fill();
-                }
-                for(int i = 0; i < route.size(); ++i) {
-                    cr->set_source_rgba(0, 0, 255, 1);
-                    int x = route[i][0];
-                    int y = route[i][1];
-                    std::cout << "point " << x << " " << y << std::endl;
-                    cr->rectangle(x-4, y-4, 10, 10);
-                    cr->fill();
-                    cr->stroke();
-                }
+            std::cout << "route.size() = " << route.size() << std::endl;
+            for(int i = 1; i < route.size(); ++i) {
+                cr->set_source_rgb(0, 255, 0);
+                int x = std::min(route[i][0], route[i-1][0]);
+                int y = std::min(route[i][1], route[i-1][1]);
+                int dx = std::abs((int)route[i][0] - (int)route[i-1][0]);
+                int dy = std::abs((int)route[i][1] - (int)route[i-1][1]);
+                std::cout << "rect " << x << " " << y << " " << dx << " " << dy << std::endl;
+                cr->rectangle(x, y, dx, dy);
+                cr->stroke();
+                cr->fill();
             }
-            nr++;
+            for(int i = 0; i < route.size(); ++i) {
+                cr->set_source_rgba(0, 0, 255, 1);
+                int x = route[i][0];
+                int y = route[i][1];
+                std::cout << "point " << x << " " << y << std::endl;
+                cr->rectangle(x-4, y-4, 10, 10);
+                cr->fill();
+                cr->stroke();
+            }
         }
         cr->save();
         cr->show_page();

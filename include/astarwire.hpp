@@ -119,14 +119,29 @@ struct AStarWire {
         vector<P3> path;
 
         path.push_back(t.origin);
-        const Vertex * e = &t;
-        std::cout << "E=" << *e << std::endl;
+        const Vertex * e = &t;        
+        // std::cout << "E=" << *e << std::endl;
             
         while(parent.find(*e) != parent.end()) {
-            e = &parent.find(*e)->second;
-            std::cout << "E=" << *e << std::endl;
-            path.push_back(e->origin);
+            auto it = parent.find(*e);
+            // const R3 & seg = it->first.track->segment;
+
+            if(it->first.track->segment != it->second.track->segment) {
+                auto p = base::crossing(
+                    it->first.track->segment,
+                    it->second.track->segment);
+                path.push_back(p);
+                std::cout<< "crossing A: " << it->first.track->segment  << std::endl;
+                std::cout<< "crossing B: " << it->second.track->segment  << std::endl;
+                std::cout<< "crossing X: " << p << std::endl;
+            }
+
+
+            e = &it->second;
+            // std::cout << "E=" << *e << std::endl;
         }
+        path.push_back(e->origin);
+
         
         return path;
     }
