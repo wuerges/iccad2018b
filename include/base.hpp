@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <array>
+#include <optional>
 
 namespace base {
 
@@ -77,10 +78,16 @@ bool operator!=(const Point<N> & p1, const Point<N> & p2) {
 }
 
 template<int N>
-Rectangle<N> intersection(const Rectangle<N> & a, const Rectangle<N> & b) {
+std::optional<Rectangle<N>> 
+intersection(const Rectangle<N> & a, const Rectangle<N> & b) {
     Rectangle<N> result{max(a.p1, b.p1), min(a.p2, b.p2)};
-    result.p1 = min(result.p1, result.p2);
-    
+
+    for(int i = 0; i < N; ++i) {
+        if(result.p1[i] > result.p2[i]) {
+            return std::nullopt;
+        }
+    }
+
     return result;
 }
 

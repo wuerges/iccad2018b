@@ -52,16 +52,18 @@ struct Vertex {
         f(up);
         f(down);
 
-        R3 window = intersection(square_around(gcell), track->segment);
+        auto window = intersection(square_around(gcell), track->segment);
         // R3 window = track->segment;
-        base::router().adjacentTracks(window, [&seg,f,this](const Track * tv){
-            // std::cout << "adjacent!!!!!" << std::endl;
-            // std::cout << tv->segment << std::endl;
+        if(window) {
+            base::router().adjacentTracks(*window, [&seg,f,this](const Track * tv){
+                // std::cout << "adjacent!!!!!" << std::endl;
+                // std::cout << tv->segment << std::endl;
 
-            Vertex v(tv, base::crossing(tv->segment, seg), gcell);
-            f(v);
-            return true;
-        });
+                Vertex v(tv, base::crossing(tv->segment, seg), gcell);
+                f(v);
+                return true;
+            });
+        }
     }
 
     friend bool operator<(const Vertex & v1, const Vertex & v2) {
