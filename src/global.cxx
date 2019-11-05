@@ -135,8 +135,8 @@ void Router::build(const ast::Input & input) {
 
 void Router::route(const Track* from, const Track* to) {
     AStarWire w;
-    Vertex v1(from, from->segment.p1, square_around(from->segment.p1));
-    Vertex v2(to, to->segment.p2, square_around(to->segment.p2));
+    Vertex v1(from, from->segment.p1, from->segment.p1);
+    Vertex v2(to, to->segment.p2, to->segment.p2);
 
     // std::cout << "pushing path" << std::endl;    
     paths.push_back(w.dijkstra(v1, v2));
