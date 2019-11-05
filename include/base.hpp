@@ -14,6 +14,25 @@ struct Point {
 
 };
 
+
+template<int N>
+Point<N> min(const Point<N> & a, const Point<N> &b) {
+    Point<N> c;
+    for(int i = 0; i < N; ++i) {
+        c.coords[i] = std::min(a[i], b[i]);
+    }
+    return c;
+}
+
+template<int N>
+Point<N> max(const Point<N> & a, const Point<N> &b) {
+    Point<N> c;
+    for(int i = 0; i < N; ++i) {
+        c.coords[i] = std::max(a[i], b[i]);
+    }
+    return c;
+}
+
 template<int N>
 bool operator<(const Point<N> & v1, const Point<N> & v2) {
     return v1.coords < v2.coords;        
@@ -53,6 +72,11 @@ bool operator!=(const Rectangle<N> & r1, const Rectangle<N> & r2) {
 template<int N>
 bool operator!=(const Point<N> & p1, const Point<N> & p2) {
     return p1.coords != p2.coords;
+}
+
+template<int N>
+Rectangle<N> intersection(const Rectangle<N> & a, const Rectangle<N> & b) {
+    return Rectangle<N>{max(a.p1, b.p1), min(a.p2, b.p2)};
 }
 
 

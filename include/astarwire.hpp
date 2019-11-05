@@ -22,6 +22,7 @@ using base::R3;
 struct Vertex {
     const Track * track;
     const P3 origin;
+    const R3 gcell;
 
     void neighbors(function<void(const Vertex&)> f) const {
         const R3 & seg = track->segment;
@@ -29,6 +30,9 @@ struct Vertex {
         // std::cout << "neighboors of " << track->segment << std::endl;
         // std::cout << "Address of router: " << &base::router() << std::endl;
         
+        R3 searchWindow = intersection(gcell, track->segment);
+
+
         base::router().adjacentTracks(*track, [&seg,f](const Track * tv){
             // std::cout << "adjacent!!!!!" << std::endl;
             // std::cout << tv->segment << std::endl;
