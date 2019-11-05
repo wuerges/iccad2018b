@@ -82,7 +82,7 @@ void Router::init_tracks(const ast::Input & input) {
             
     //         int number_of_collisions = 0;
     //         adjacentTracks(track, [&](const Track * v) {
-    //             std::cout << "  v: " << v->segment << std::endl;
+    //             // std::cout << "  v: " << v->segment << std::endl;
     //             number_of_collisions++;
     //             return true;
     //         });            
@@ -147,31 +147,31 @@ void Router::route(const Track* from, const Track* to) {
 
 
 void Router::global_routing(const ast::Input & input) {
-    for(auto bus : input.buses) {
-        for(auto bit : bus.bits) {
-            if(bit.shapes.size() != 2) {
-                std::cout << "bit with shapes != 2" << std::endl;
-                // exit(-1);
-            }
-            auto shape1 = fromRoutedShape(bit.shapes[0]);
-            auto shape2 = fromRoutedShape(bit.shapes[1]);
+    // for(auto bus : input.buses) {
+    //     for(auto bit : bus.bits) {
+    //         if(bit.shapes.size() != 2) {
+    //             std::cout << "bit with shapes != 2" << std::endl;
+    //             // exit(-1);
+    //         }
+    //         auto shape1 = fromRoutedShape(bit.shapes[0]);
+    //         auto shape2 = fromRoutedShape(bit.shapes[1]);
 
-            Track* t1;
-            track_index.Search(
-                shape1.p1.coords.begin(), 
-                shape1.p2.coords.begin(),
-                [&t1](auto x) { t1 = x; return false; }
-                );
-            Track* t2;
-            track_index.Search(
-                shape2.p1.coords.begin(), 
-                shape2.p2.coords.begin(),
-                [&t2](auto x) { t2 = x; return false; }
-                );
-            route(t1, t2);
-            std::cout << "track " << t1 << " --> " << t2 << std::endl;
-        }
-    }
+    //         Track* t1;
+    //         track_index.Search(
+    //             shape1.p1.coords.begin(), 
+    //             shape1.p2.coords.begin(),
+    //             [&t1](auto x) { t1 = x; return false; }
+    //             );
+    //         Track* t2;
+    //         track_index.Search(
+    //             shape2.p1.coords.begin(), 
+    //             shape2.p2.coords.begin(),
+    //             [&t2](auto x) { t2 = x; return false; }
+    //             );
+    //         route(t1, t2);
+    //         std::cout << "track " << t1 << " --> " << t2 << std::endl;
+    //     }
+    // }
 }
 
 }
