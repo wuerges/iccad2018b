@@ -54,6 +54,8 @@ struct Rectangle {
     Point<N> p1, p2;
 };
 
+
+
 template<int N>
 bool operator==(const Point<N> & p1, const Point<N> & p2) {
     return p1.coords == p2.coords;
@@ -152,5 +154,16 @@ using R3 = Rectangle<3>;
 using P2 = Point<2>;
 using P3 = Point<3>;
 
+
+template<int N>
+Rectangle<N> square_around(const Point<N> & p) {
+    const int distance = 100;
+    Rectangle<N> r{p, p};
+    for(int i = 0; i < N; ++i) {
+        r.p1.coords[i] -= distance;
+        r.p2.coords[i] += distance;
+    }
+    return r;
+}
 
 }

@@ -24,20 +24,24 @@ struct Vertex {
     const P3 origin;
     const R3 gcell;
 
+    Vertex(const Track * track, const P3 & origin, const R3 & gcell)
+    : track(track), origin(origin), gcell(gcell) {}
+
     void neighbors(function<void(const Vertex&)> f) const {
         const R3 & seg = track->segment;
         // std::cout << seg << std::endl;
         // std::cout << "neighboors of " << track->segment << std::endl;
         // std::cout << "Address of router: " << &base::router() << std::endl;
         
-        R3 searchWindow = intersection(gcell, track->segment);
+        // R3 window = track->segment;
+        R3 window = intersection(gcell, track->segment);
 
 
-        base::router().adjacentTracks(*track, [&seg,f](const Track * tv){
+        base::router().adjacentTracks(window, [&seg,f,this](const Track * tv){
             // std::cout << "adjacent!!!!!" << std::endl;
             // std::cout << tv->segment << std::endl;
 
-            Vertex v{tv, base::crossing(tv->segment, seg)};
+            Vertex v(tv, base::crossing(tv->segment, seg), gcell);
             f(v);
             return true;
         });

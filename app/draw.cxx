@@ -53,10 +53,10 @@ int main(int narg, char** argv)
         }
         
 
-        // std::cout << "draw paths.size(): " << base::router().paths.size() << std::endl;
+        std::cout << "draw paths.size(): " << base::router().paths.size() << std::endl;
 
         for(auto & route : base::router().paths) {
-            // std::cout << "route.size() = " << route.size() << std::endl;
+            std::cout << "route.size() = " << route.size() << std::endl;
             for(int i = 1; i < route.size(); ++i) {
                 cr->set_source_rgb(0, 255, 0);
                 int x = std::min(route[i][0], route[i-1][0]);

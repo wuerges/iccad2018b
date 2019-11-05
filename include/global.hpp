@@ -39,7 +39,7 @@ struct Router {
     vector<Layer> layers;
 
     rtree::RTree<Track*, int, 3, double> track_index;
-    void adjacentTracks(const Track &, std::function<bool(const Track*)>) const;
+    void adjacentTracks(const R3 &, std::function<bool(const Track*)>) const;
 
     rtree::RTree<R3*, int, 3, double> obstacle_index;
 
