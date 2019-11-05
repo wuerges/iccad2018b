@@ -78,7 +78,10 @@ bool operator!=(const Point<N> & p1, const Point<N> & p2) {
 
 template<int N>
 Rectangle<N> intersection(const Rectangle<N> & a, const Rectangle<N> & b) {
-    return Rectangle<N>{max(a.p1, b.p1), min(a.p2, b.p2)};
+    Rectangle<N> result{max(a.p1, b.p1), min(a.p2, b.p2)};
+    result.p1 = min(result.p1, result.p2);
+    
+    return result;
 }
 
 
