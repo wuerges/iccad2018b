@@ -166,8 +166,7 @@ using P3 = Point<3>;
 
 
 template<int N>
-Rectangle<N> square_around(const Point<N> & p) {
-    const int distance = 100;
+Rectangle<N> square_around(const Point<N> & p, const int distance = 100) {
     Rectangle<N> r{p, p};
     for(int i = 0; i < N; ++i) {
         r.p1.coords[i] -= distance;

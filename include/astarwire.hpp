@@ -39,12 +39,12 @@ struct Vertex {
         P3 gcell_up = gcell;
         P3 gcell_down = gcell; 
         if(track->segment.p1[0] == track->segment.p2[0]) {
-            gcell_up.coords[1] -= 100;
-            gcell_down.coords[1] += 100;
+            gcell_up.coords[1] -= 50;
+            gcell_down.coords[1] += 50;
         }
         else {
-            gcell_up.coords[0] -= 100;
-            gcell_down.coords[0] += 100;
+            gcell_up.coords[0] -= 50;
+            gcell_down.coords[0] += 50;
         }
         Vertex up(track, origin, gcell_up);
         Vertex down(track, origin, gcell_down);
@@ -53,7 +53,7 @@ struct Vertex {
         f(down);
 
         auto window = intersection(square_around(gcell), track->segment);
-        // R3 window = track->segment;
+        // std::optional<R3> window = track->segment;
         if(window) {
             base::router().adjacentTracks(*window, [&seg,f,this](const Track * tv){
                 // std::cout << "adjacent!!!!!" << std::endl;
