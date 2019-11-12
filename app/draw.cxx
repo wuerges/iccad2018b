@@ -55,7 +55,11 @@ int main(int narg, char** argv)
 
         std::cout << "draw paths.size(): " << base::router().paths.size() << std::endl;
 
+        int n_route = 0;
         for(auto & route : base::router().paths) {
+            n_route++;
+            // if(n_route != 1) continue;
+
             std::cout << "route.size() = " << route.size() << std::endl;
             for(int i = 1; i < route.size(); ++i) {
                 cr->set_source_rgb(0, 255, 0);
@@ -77,6 +81,7 @@ int main(int narg, char** argv)
                 cr->fill();
                 cr->stroke();
             }
+
         }
         cr->save();
         cr->show_page();

@@ -27,6 +27,25 @@ struct Vertex {
     Vertex(const Track * track, const P3 & origin, const P3 & gcell)
     : track(track), origin(origin), gcell(gcell) {}
 
+    bool horizontal() const {
+        return track->segment.p1[0] == track->segment.p2[0];
+    }
+
+    std::optional<Vertex> move_gcell(int step) const {
+        P3 gcell_up = gcell;
+        P3 origin_up = origin;
+
+        int c = horizontal() ? 1 : 0;
+        gcell_up.coords[c] += step;
+        origin_up.coords[c] += step;
+
+        if(intersection(R3{origin_up, origin_up}, track->segment)) {
+            return Vertex(track, origin_up, gcell_up);
+        }
+        return std::nullopt;
+    }
+
+
     void neighbors(function<void(const Vertex&)> f) const {
         const R3 & seg = track->segment;
         // std::cout << seg << std::endl;
@@ -36,21 +55,15 @@ struct Vertex {
         // R3 window = track->segment;
 
         // if horizontal
-        P3 gcell_up = gcell;
-        P3 gcell_down = gcell; 
-        if(track->segment.p1[0] == track->segment.p2[0]) {
-            gcell_up.coords[1] -= 50;
-            gcell_down.coords[1] += 50;
-        }
-        else {
-            gcell_up.coords[0] -= 50;
-            gcell_down.coords[0] += 50;
-        }
-        Vertex up(track, origin, gcell_up);
-        Vertex down(track, origin, gcell_down);
+        auto up = move_gcell(-50);
+        auto down = move_gcell(50);
 
-        f(up);
-        f(down);
+        if(up) {
+            f(*up);
+        }
+        if(down) {
+            f(*down);
+        }
 
         auto window = intersection(square_around(gcell), track->segment);
         // std::optional<R3> window = track->segment;
@@ -59,7 +72,13 @@ struct Vertex {
                 // std::cout << "adjacent!!!!!" << std::endl;
                 // std::cout << tv->segment << std::endl;
 
-                Vertex v(tv, base::crossing(tv->segment, seg), gcell);
+
+                int nz = tv->segment.p1[2];
+                auto cp = base::crossing(tv->segment, seg);
+                cp.coords[2] = nz;
+                auto gc = gcell;
+                gc.coords[2] = nz;
+                Vertex v(tv, cp, gc);
                 f(v);
                 return true;
             });
@@ -70,11 +89,14 @@ struct Vertex {
         if(v1.origin != v2.origin) {
             return v1.origin < v2.origin;
         }
+        if(v1.gcell != v2.gcell) {
+            return v1.gcell < v2.gcell;
+        }
         return *v1.track < *v2.track;
     }
 
     friend std::ostream & operator<<(std::ostream & out, const Vertex & v) {
-        out << "Vertex(track=" << v.track->segment << ",origin=" << v.origin << ")";
+        out << "Vertex(track=" << v.track->segment << ",origin=" << v.origin << ",gcell="<<v.gcell<<")";
         return out;
     }
 
