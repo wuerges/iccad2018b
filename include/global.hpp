@@ -1,7 +1,7 @@
 #pragma once
 
 #include <ast.hpp>
-#include <base.hpp>
+#include <geometry.hpp>
 
 #include <RTree.h>
 
@@ -13,6 +13,7 @@ using std::vector;
 using std::pair;
 
 namespace base {
+    using namespace geometry;
 
 struct Track {
     R3 segment; // the rectangle for this track;

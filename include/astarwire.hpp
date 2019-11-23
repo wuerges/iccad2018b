@@ -1,7 +1,7 @@
 #pragma once
 
 #include <global.hpp>
-#include <base.hpp>
+#include <geometry.hpp>
 
 #include <set>
 #include <map>
@@ -16,8 +16,8 @@ using std::pair;
 using std::map; 
 using std::function;
 using base::Track;
-using base::P3;
-using base::R3;
+using geometry::P3;
+using geometry::R3;
 
 struct Vertex {
     const Track * track;

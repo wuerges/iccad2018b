@@ -11,7 +11,7 @@ using std::ostream;
 
 struct ResultShape {
     int layer;
-    base::Rectangle<2> rect;
+    geometry::Rectangle<2> rect;
 
     friend std::ostream & operator<<(std::ostream &, const ResultShape &);
 };
