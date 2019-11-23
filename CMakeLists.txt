@@ -19,15 +19,17 @@ include_directories(${Cairomm_PKGCONF_INCLUDE_DIRS})
 # If you wish to change the library type of RapidCheck, you can either specify the variable when invoking CMake
 # or, if you are including RapidCheck as a subdirectory and wish to control the library type, you can set
 # the variable before the call to add_subdirectory and reset it afterwards, if necessary.
+
+include_directories( include )
+
+add_subdirectory("ext-libs/cad_geometry")
 add_library(libs
-  src/base.cxx
   src/parser.cxx  
   src/solver.cxx
   src/result.cxx
   src/astar.cxx
   src/global.cxx
   )
-include_directories(include)
 
 IF(EXISTS "${PROJECT_SOURCE_DIR}/ext-libs/rapidcheck/CMakeLists.txt")
   add_subdirectory("ext-libs/rapidcheck")
@@ -37,6 +39,7 @@ ENDIF()
 add_executable(Report app/report.cxx)
 target_link_libraries(Report
     libs
+    cadgeometry
   ${Boost_FILESYSTEM_LIBRARY}
   ${Boost_SYSTEM_LIBRARY}
   )
