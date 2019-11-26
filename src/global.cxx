@@ -1,5 +1,6 @@
 #include <global.hpp>
-#include <astarwire.hpp>
+// #include <astarwire.hpp>
+#include <astarwire_rtreequeue.hpp>
 
 namespace base {
 
@@ -134,12 +135,12 @@ void Router::build(const ast::Input & input) {
 
 
 void Router::route(const Track* from, const Track* to) {
-    AStarWire w;
-    Vertex v1(from, from->segment.p1, from->segment.p1);
-    Vertex v2(to, to->segment.p2, to->segment.p2);
+    AStarWireRTQ w;
+    Vertex v1(from, from->segment.p1, to->segment);
+    // R3  v2(to, to->segment.p2, to->segment.p2);
 
     // std::cout << "pushing path" << std::endl;    
-    paths.push_back(w.dijkstra(v1, v2));
+    paths.push_back(w.dijkstra(v1, to->segment));
 
     // std::cout << "calc p.size() = " << paths.back().size() << std::endl;
     
