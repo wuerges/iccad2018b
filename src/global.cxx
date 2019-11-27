@@ -134,13 +134,12 @@ void Router::build(const ast::Input & input) {
 }
 
 
-void Router::route(const Track* from, const Track* to) {
+void Router::route(const R3 & from, const R3 & to) {
     AStarWireRTQ w;
-    Vertex v1(from, from->segment.p1, to->segment);
     // R3  v2(to, to->segment.p2, to->segment.p2);
 
     // std::cout << "pushing path" << std::endl;    
-    paths.push_back(w.dijkstra(v1, to->segment));
+    paths.push_back(w.detailed_route(from, to));
 
     // std::cout << "calc p.size() = " << paths.back().size() << std::endl;
     
@@ -157,20 +156,20 @@ void Router::global_routing(const ast::Input & input) {
             auto shape1 = fromRoutedShape(bit.shapes[0]);
             auto shape2 = fromRoutedShape(bit.shapes[1]);
 
-            Track* t1;
-            track_index.Search(
-                shape1.p1.coords.begin(), 
-                shape1.p2.coords.begin(),
-                [&t1](auto x) { t1 = x; return false; }
-                );
-            Track* t2;
-            track_index.Search(
-                shape2.p1.coords.begin(), 
-                shape2.p2.coords.begin(),
-                [&t2](auto x) { t2 = x; return false; }
-                );
-            route(t1, t2);
-            std::cout << "track " << t1 << " --> " << t2 << std::endl;
+            // Track* t1;
+            // track_index.Search(
+            //     shape1.p1.coords.begin(), 
+            //     shape1.p2.coords.begin(),
+            //     [&t1](auto x) { t1 = x; return false; }
+            //     );
+            // Track* t2;
+            // track_index.Search(
+            //     shape2.p1.coords.begin(), 
+            //     shape2.p2.coords.begin(),
+            //     [&t2](auto x) { t2 = x; return false; }
+            //     );
+            route(shape1, shape2);
+            std::cout << "track " << shape1 << " --> " << shape2 << std::endl;
         }
     }
 }

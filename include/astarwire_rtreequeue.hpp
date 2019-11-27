@@ -82,33 +82,58 @@ int distance(const Vertex & v1, const Vertex & v2) {
 // }
 
 struct AStarWireRTQ {
+
+    vector<base::P3> detailed_route(const R3 & s, const R3 & t) {
+        Track * from;
+        base::router().track_index.Search(s.p1.coords.begin(), s.p2.coords.begin(), [&from](auto t){
+            from = t;
+            return false;
+        });
+
+        // TODO need to improve this, to select exterior point.
+        auto origin_rect = intersection(s, from->segment);
+
+        Vertex source(from, origin_rect->p1, t);
+
+        std::cout << "FROM1:" << from->segment << std::endl;
+        std::cout << "FROM2:" << s << std::endl;
+        std::cout << "FROM3:" << *origin_rect << std::endl;
+        return dijkstra(source, t);
+    }
     
     vector<base::P3> dijkstra(const Vertex s, const R3 t) {
         // std::cout << "Dikstra for " << s << " " << t << std::endl;
 
         map<Vertex, int> dist;
-        map<const R3, const R3> parent;
+        map<const P3, const P3> parent;
         
         multimap<int, Vertex> pq;
         dist[s] = 0;
         // std::cout << "Insert into pq: " << s << std::endl;
-        pq.emplace(0, s);
+        pq.emplace(distance(s.track->segment, t), s);
         bool found = false;
 
+        P3 p_dest;
+        R3 r_dest;
 
         while(!pq.empty()) {
+            // std::cout << "while pq.empty()?" << std::endl;
             Vertex & u = pq.begin()->second;
 
             // std::cout<< "taking from pq: " << u << std::endl;
             // std::cout << "pq.size() " << pq.size() << std::endl;
-            std::cout << "distance=" << distance(t, u.track->segment) << std::endl;
+            // std::cout << "distance=" << distance(t, u.track->segment) << std::endl;
 
-            if(distance(t, u.track->segment) == 0) {
+            if(collides(t, u.track->segment)) {
+                p_dest = u.origin;
+                r_dest = u.track->segment;
                 std::cout << "Found!" << std::endl;
+                std::cout << "u.track->segment" << u.track->segment << std::endl;
+                // std::cout << "parent? " << parent.count(u.track->segment) << std::endl;
                 // std::cout << "t=" << t << std::endl;
                 // std::cout << "u=" << u << std::endl;
 
-                parent.insert(std::make_pair(t, u.track->segment));                
+                // parent.emplace(t, u.track->segment);
                 found = true;
                 break;
             }
@@ -119,6 +144,10 @@ struct AStarWireRTQ {
             }
 
             Vertex v = u.next_neighbor();
+            if(v.track == u.track) {
+                continue;
+            }
+            // std::cout << "next neighboor?" <<std::endl;
 
             int du = dist[u];
             if(dist.find(v) == dist.end()) {
@@ -136,38 +165,53 @@ struct AStarWireRTQ {
                 // pq.erase(Link(dv+h, v));
                 dv = du + w;
                 pq.emplace(dv+h, v);
-                parent.erase(v.track->segment);
-                parent.emplace(v.track->segment,u.track->segment);
+                parent.erase(v.origin);
+                parent.emplace(v.origin, u.origin);
+                // std::cout << "parent["<<v.track->segment<<"]=" << u.track->segment <<std::endl;
             }
         }
 
         vector<P3> path;
+        if(!found) return path;
 
-        path.push_back(t.p1);
-        R3 e = t;
+        // std::cout << "ORIGIN=" << s.origin << '\n';
+        // std::cout << "TARGET=" << t << '\n';
+
+        auto plast = intersection(r_dest, t);
+        path.push_back(plast->p1);
+        path.push_back(p_dest);
+        
+        P3 e = p_dest;
         // std::cout << "E=" << *e << std::endl;
-            
-        while(parent.count(e) > 0) {
+
+
+        std::cout << "Backtracking route" << std::endl;
+        while(!collides(e, s.track->segment)) {
             auto it = parent.find(e);
+            std::cout << "Backstep:" << e << std::endl;
             // const R3 & seg = it->first.track->segment;
 
             if(it->first == it->second) {
                 break;
             }
-            auto p = base::crossing(
-                it->first,
-                it->second);
-            path.push_back(p);
+            // auto p1 = base::crossing(
+            //     it->first,
+            //     it->second);
 
+            // auto p2 = p1;
+            // p2.coords[2] = it->first.p1[2];
+            // p1.coords[2] = it->second.p1[2];
 
             e = it->second;
+            
+            path.push_back(e);
+            // path.push_back(p1);
+
+
 
             
             // std::cout << "E=" << *e << std::endl;
         }
-        path.push_back(e.p1);
-
-        
         return path;
     }
 

@@ -57,7 +57,7 @@ struct Router {
 
 
     vector<vector<P3>> paths;
-    void route(const Track* from, const Track* to);
+    void route(const R3 & from, const R3 & to);
     void global_routing(const ast::Input & input);
 
     static Router& router()
