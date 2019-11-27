@@ -95,14 +95,15 @@ struct AStarWireRTQ {
 
         Vertex source(from, origin_rect->p1, t);
 
-        std::cout << "FROM1:" << from->segment << std::endl;
-        std::cout << "FROM2:" << s << std::endl;
-        std::cout << "FROM3:" << *origin_rect << std::endl;
+        // std::cout << "FROM1:" << from->segment << std::endl;
+        // std::cout << "FROM2:" << s << std::endl;
+        // std::cout << "FROM3:" << *origin_rect << std::endl;
         return dijkstra(source, t);
     }
     
     vector<base::P3> dijkstra(const Vertex s, const R3 t) {
         // std::cout << "Dikstra for " << s << " " << t << std::endl;
+        double tiebreak = 1.2;
 
         map<Vertex, int> dist;
         map<const P3, const P3> parent;
@@ -110,7 +111,7 @@ struct AStarWireRTQ {
         multimap<int, Vertex> pq;
         dist[s] = 0;
         // std::cout << "Insert into pq: " << s << std::endl;
-        pq.emplace(distance(s.track->segment, t), s);
+        pq.emplace(distance(s.track->segment, t)*tiebreak, s);
         bool found = false;
 
         P3 p_dest;
@@ -127,8 +128,8 @@ struct AStarWireRTQ {
             if(collides(t, u.track->segment)) {
                 p_dest = u.origin;
                 r_dest = u.track->segment;
-                std::cout << "Found!" << std::endl;
-                std::cout << "u.track->segment" << u.track->segment << std::endl;
+                // std::cout << "Found!" << std::endl;
+                // std::cout << "u.track->segment" << u.track->segment << std::endl;
                 // std::cout << "parent? " << parent.count(u.track->segment) << std::endl;
                 // std::cout << "t=" << t << std::endl;
                 // std::cout << "u=" << u << std::endl;
@@ -160,6 +161,7 @@ struct AStarWireRTQ {
             if(dv > du + w) {
 
                 int h = distance(v.origin, t);
+                h *= tiebreak;
 
                 // std::cout << "adding to pq = " << v << std::endl;
                 // pq.erase(Link(dv+h, v));
@@ -185,10 +187,10 @@ struct AStarWireRTQ {
         // std::cout << "E=" << *e << std::endl;
 
 
-        std::cout << "Backtracking route" << std::endl;
+        // std::cout << "Backtracking route" << std::endl;
         while(!collides(e, s.track->segment)) {
             auto it = parent.find(e);
-            std::cout << "Backstep:" << e << std::endl;
+            // std::cout << "Backstep:" << e << std::endl;
             // const R3 & seg = it->first.track->segment;
 
             if(it->first == it->second) {
